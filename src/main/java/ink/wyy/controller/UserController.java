@@ -27,7 +27,7 @@ public class UserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
-        UserDao userDao = new UserDaoImpl("localhost:3306", "noixforum", "wyy", "wyy20020929");
+        UserDao userDao = new UserDaoImpl("localhost:3306", "noixforum", "wyy", "qwqwq123");
         context.setAttribute("userDao", userDao);
         userService = new UserServiceImpl(userDao);
         context.setAttribute("userService", userService);

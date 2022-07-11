@@ -45,4 +45,12 @@
     <filter-name>articleFilter</filter-name>
     <url-pattern>/article/*</url-pattern>
   </filter-mapping>
+  <filter>
+    <filter-name>followFilter</filter-name>
+    <filter-class>ink.wyy.filter.FollowFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>followFilter</filter-name>
+    <url-pattern>/follow/*</url-pattern>
+  </filter-mapping>
 </web-app>

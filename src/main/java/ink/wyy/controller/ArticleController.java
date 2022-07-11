@@ -28,7 +28,7 @@ public class ArticleController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
-        ArticleDao articleDao = new ArticleDaoImpl("localhost:3306", "noixforum", "wyy", "wyy20020929");
+        ArticleDao articleDao = new ArticleDaoImpl("localhost:3306", "noixforum", "wyy", "qwqwq123");
         context.setAttribute("articleDao", articleDao);
         articleService = new ArticleServiceImpl(articleDao);
         context.setAttribute("articleService", articleService);
