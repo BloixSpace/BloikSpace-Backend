@@ -88,6 +88,7 @@ public class UserController extends HttpServlet {
             res.put("status", 0);
             res.put("errMsg", "已登录");
             writer.write(gson.toJson(res));
+            // {"status":0,"errMsg":"已登录"}
             return;
         }
         if (username == null || username.equals("") ||
