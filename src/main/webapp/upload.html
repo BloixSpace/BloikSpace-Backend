@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    var fileInput1 = document.getElementById("fileInput1");
+    fileInput1.addEventListener('change', function(event) {
+      var file = fileInput1.files[0];
+      // 或file = fileInput1.files.item(0);
+      console.log(file);
+      document.getElementById('showFile1').innerHTML= file.name
+    }, false);
+
+    function handleSubmit(_this) {
+      var form = $(_this);
+      // mulitipart form,如文件上传类
+      var formData = new FormData();
+      formData.append('file', $('#fileInput1')[0].files[0]);
+      //var formData = new FormData(form[0]);
+      $.ajax({
+        type: form.attr('method'),
+        url: form.attr('action'),
+        data: formData,
+        mimeType: "multipart/form-data",
+        contentType: false,
+        cache: false,
+        processData: false
+      })
+              .success(function (res) {
+                //成功提交
+                console.log(res)
+                document.getElementById('result').innerHTML= '上传成功'
+              })
+              .error(function (jqXHR, textStatus, errorThrown) {
+                //错误信息
+                document.getElementById('result').innerHTML= '上传失败'
+              });
+      return false;
+    }
+  </script>
+</head>
+<body>
+<form id="upload-form" action="/file/upload" onsubmit="return handleSubmit(this)" method="post" enctype="multipart/form-data" >
+  <div class="filePicker">
+    <label>点击选择文件</label>
+    <input id="fileInput1" type="file" name="file" multiple="multiple">
+  </div>
+  <input type="submit" value="上传" />
+</form>
+</body>
+</html>
