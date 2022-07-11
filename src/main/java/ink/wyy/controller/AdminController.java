@@ -99,6 +99,7 @@ public class AdminController extends HttpServlet {
         resp.getWriter().write(gson.toJson(res));
     }
 
+
     private void doDeleteArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         HashMap<String, Object> res = new HashMap<>();
