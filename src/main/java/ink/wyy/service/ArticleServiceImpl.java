@@ -84,6 +84,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public String getList(int page, int pageSize, String order, String category, Integer userId) {
         HashMap<String, Object> map = articleDao.getList(page, pageSize, order, category, userId);
+        if (map == null) {
+            map = new HashMap<>();
+            map.put("status", 0);
+            map.put("errMsg", "order不存在");
+        }
         Gson gson = new Gson();
         return gson.toJson(map);
     }

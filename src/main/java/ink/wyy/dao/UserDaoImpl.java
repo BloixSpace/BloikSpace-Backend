@@ -2,10 +2,10 @@ package ink.wyy.dao;
 
 import ink.wyy.bean.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class UserDaoImpl implements UserDao{
 
@@ -200,6 +200,56 @@ public class UserDaoImpl implements UserDao{
             }
             return null;
         }
+    }
+
+    @Override
+    public HashMap<String, Object> getUserList(int page, int pageSize, String order, boolean desc) {
+        try {
+            String sql = "select * from users order by " + order + " limit ?, ?";
+            if (desc) sql = "select * from users order by " + order + " desc limit ?, ?";
+            String totSql = "select count(*) from users";
+            Statement statement1 = con.createStatement();
+
+            ResultSet resultSet = statement1.executeQuery(totSql);
+            resultSet.next();
+            int allNum = resultSet.getInt(1);
+            int pageNum = allNum / pageSize;
+            if (allNum % pageSize != 0) pageNum++;
+
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, (page - 1) * pageSize);
+            statement.setInt(2, pageSize);
+
+            HashMap<String, Object> res = new HashMap<>();
+            int num = 0;
+            res.put("page", page);
+            res.put("pageNum", pageNum);
+            List<HashMap<String, Object>> list = new ArrayList<>();
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                num++;
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("id", rs.getInt("id"));
+                map.put("username", rs.getString("username"));
+                map.put("avatarUri", rs.getString("avatarUri"));
+                map.put("signature", rs.getString("signature"));
+                map.put("level", rs.getInt("level"));
+                map.put("create_date", rs.getString("create_date"));
+                list.add(map);
+            }
+            res.put("num", num);
+            res.put("users", list);
+            con.commit();
+            return res;
+        } catch (SQLException e) {
+            System.out.println(e);
+            try {
+                con.rollback();
+            } catch (SQLException ee) {
+                System.out.println(ee);
+            }
+        }
+        return null;
     }
 
     @Override

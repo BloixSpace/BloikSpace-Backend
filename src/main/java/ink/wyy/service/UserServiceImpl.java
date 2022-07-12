@@ -1,16 +1,20 @@
 package ink.wyy.service;
 
+import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.UserDao;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
+    private Gson gson;
 
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
+        gson = new Gson();
     }
 
     @Override
@@ -163,5 +167,16 @@ public class UserServiceImpl implements UserService {
             user.setErrorMsg(msg);
         }
         return user;
+    }
+
+    @Override
+    public String getUserList(int page, int pageSize, String order, boolean desc) {
+        HashMap<String, Object> res = userDao.getUserList(page, pageSize, order, desc);
+        if (res == null) {
+            res = new HashMap<>();
+            res.put("status", 0);
+            res.put("errMsg", "order不存在");
+        }
+        return gson.toJson(res);
     }
 }

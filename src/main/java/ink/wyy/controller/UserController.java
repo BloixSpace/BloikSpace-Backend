@@ -66,6 +66,9 @@ public class UserController extends HttpServlet {
             case "/user/getUserInfo":
                 doGetUserInfo(req, resp);
                 break;
+            case "/user/getUserList":
+                doGetUserList(req, resp);
+                break;
             default:
                 resp.sendError(404);
         }
@@ -204,5 +207,32 @@ public class UserController extends HttpServlet {
         session.setAttribute("user", user);
         res.put("status", 1);
         resp.getWriter().write(gson.toJson(res));
+    }
+
+    private void doGetUserList(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+        String s_page = req.getParameter("page");
+        String s_pageSize = req.getParameter("page_size");
+        String order = req.getParameter("order");
+        String s_desc = req.getParameter("desc");
+
+        Boolean desc = false;
+        if (s_page == null || s_page.equals("")) {
+            s_page = "1";
+        }
+        if (s_pageSize == null || s_pageSize.equals("")) {
+            s_pageSize = "20";
+        }
+        if (s_desc == null || s_desc.equals("")) {
+            s_desc = "false";
+        }
+        if (order == null || order.equals("")) {
+            order = "username";
+        }
+        Integer page = Integer.valueOf(s_page);
+        Integer pageSize = Integer.valueOf(s_pageSize);
+        if (s_desc.equals("true")) desc = true;
+
+        String res = userService.getUserList(page, pageSize, order, desc);
+        resp.getWriter().write(res);
     }
 }

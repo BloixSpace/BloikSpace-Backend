@@ -163,7 +163,7 @@ public class ArticleDaoImpl implements ArticleDao{
                 totSql += " 1=1";
                 sql += " 1=1 ";
             }
-            sql += " order by ? limit ?, ?";
+            sql += " order by " + order + " limit ?, ?";
             PreparedStatement statement = con.prepareStatement(sql);
             Statement statement1 = con.createStatement();
             ResultSet totSet = statement1.executeQuery(totSql);
@@ -176,9 +176,8 @@ public class ArticleDaoImpl implements ArticleDao{
                 if (category != null) statement.setInt(2, userId);
                 else statement.setInt(1, userId);
             }
-            statement.setString(bias + 1, order);
-            statement.setInt(bias + 2, (page - 1) * pageSize);
-            statement.setInt(bias + 3, pageSize);
+            statement.setInt(bias + 1, (page - 1) * pageSize);
+            statement.setInt(bias + 2, pageSize);
             ResultSet rs = statement.executeQuery();
             HashMap<String, Object> map = new HashMap<>();
             int num = 0;

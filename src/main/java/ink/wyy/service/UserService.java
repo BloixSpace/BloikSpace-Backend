@@ -13,4 +13,5 @@ public interface UserService {
     User addUser(HttpServletRequest req);
     String delUser(Integer id);
     User updatePassword(User user, String newPwd, String oldPwd);
+    String getUserList(int page, int pageSize, String order, boolean desc);
 }

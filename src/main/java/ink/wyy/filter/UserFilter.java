@@ -22,12 +22,18 @@ public class UserFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
         String uri = req.getRequestURI();
-        if (uri.equals("/user/login") || uri.equals("/user/register")) {
-            chain.doFilter(req, resp);
-        } else if (req.getSession().getAttribute("user") != null) {
-            chain.doFilter(req, resp);
-        } else {
-            resp.getWriter().write("{\"status\":0,\"errMsg\":\"未登录\"}");
+        switch (uri) {
+            case "/user/login":
+            case "/user/register":
+            case "/user/getUserList":
+                chain.doFilter(req, resp);
+                break;
+            default:
+                if (req.getSession().getAttribute("user") != null) {
+                    chain.doFilter(req, resp);
+                } else {
+                    resp.getWriter().write("{\"status\":0,\"errMsg\":\"未登录\"}");
+                }
         }
     }
 
