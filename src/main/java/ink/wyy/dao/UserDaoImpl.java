@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String insert(User user) {
         try {
-            String sql = "insert into users (username, password, create_date, signature, avatarUri, level)" +
+            String sql = "insert into users (username, password, create_date, signature, avatar_uri, level)" +
                     " values (?,?,now(),?,?,?);";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getUsername());
@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public String update(Integer id, User user) {
-        String sql = "update users set username=?, password=?, signature=?, avatarUri=?, level=? where id=?";
+        String sql = "update users set username=?, password=?, signature=?, avatar_uri=?, level=? where id=?";
         try {
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getUsername());
@@ -110,7 +110,7 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public String updateUserInfo(Integer id, User user) {
-        String sql = "update users set signature=?, avatarUri=? where id=?";
+        String sql = "update users set signature=?, avatar_uri=? where id=?";
         try {
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getSignature());
@@ -148,7 +148,7 @@ public class UserDaoImpl implements UserDao{
                 user = new User(rs.getString("username"),
                         rs.getString("password"),
                         rs.getInt("id"));
-                user.setAvatarUri(rs.getString("avatarUri"));
+                user.setAvatarUri(rs.getString("avatar_uri"));
                 user.setCreateDate(rs.getDate("create_date"));
                 user.setSignature(rs.getString("signature"));
                 user.setLevel(rs.getInt("level"));
@@ -181,7 +181,7 @@ public class UserDaoImpl implements UserDao{
                 user = new User(rs.getString("username"),
                         rs.getString("password"),
                         rs.getInt("id"));
-                user.setAvatarUri(rs.getString("avatarUri"));
+                user.setAvatarUri(rs.getString("avatar_uri"));
                 user.setCreateDate(rs.getDate("create_date"));
                 user.setSignature(rs.getString("signature"));
                 user.setLevel(rs.getInt("level"));
@@ -231,7 +231,7 @@ public class UserDaoImpl implements UserDao{
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("id", rs.getInt("id"));
                 map.put("username", rs.getString("username"));
-                map.put("avatarUri", rs.getString("avatarUri"));
+                map.put("avatar_uri", rs.getString("avatar_uri"));
                 map.put("signature", rs.getString("signature"));
                 map.put("level", rs.getInt("level"));
                 map.put("create_date", rs.getString("create_date"));

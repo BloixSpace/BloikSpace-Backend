@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/noixForum</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="noixforum@forum.wyy.ink" uuid="355f6e5e-4533-488b-8319-c1f583298f73">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://forum.wyy.ink:13306/noixforum</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

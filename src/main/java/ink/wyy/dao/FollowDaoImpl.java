@@ -97,16 +97,16 @@ public class FollowDaoImpl implements FollowDao{
             while (rs.next()) {
                 num++;
                 Integer id = rs.getInt(1);
-                String sql1 = "select username, avatarUri, signature from users where id=" + id;
+                String sql1 = "select username, avatar_uri, signature from users where id=" + id;
                 ResultSet set = statement1.executeQuery(sql1);
                 set.next();
                 String username = set.getString(1);
-                String avatarUri = set.getString(2);
+                String avatar_uri = set.getString(2);
                 String signature = set.getString(3);
                 HashMap<String, Object> map1 = new HashMap<>();
                 map1.put("id", id);
                 map1.put("username", username);
-                map1.put("avatarUri", avatarUri);
+                map1.put("avatar_uri", avatar_uri);
                 map1.put("signature", signature);
                 list.add(map1);
             }
@@ -153,16 +153,16 @@ public class FollowDaoImpl implements FollowDao{
             while (rs.next()) {
                 num++;
                 Integer id = rs.getInt(1);
-                String sql1 = "select username, avatarUri, signature from users where id=" + id;
+                String sql1 = "select username, avatar_uri, signature from users where id=" + id;
                 ResultSet set = statement1.executeQuery(sql1);
                 set.next();
                 String username = set.getString(1);
-                String avatarUri = set.getString(2);
+                String avatar_uri = set.getString(2);
                 String signature = set.getString(3);
                 HashMap<String, Object> map1 = new HashMap<>();
                 map1.put("id", id);
                 map1.put("username", username);
-                map1.put("avatarUri", avatarUri);
+                map1.put("avatar_uri", avatar_uri);
                 map1.put("signature", signature);
                 list.add(map1);
             }
