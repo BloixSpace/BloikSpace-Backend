@@ -27,7 +27,7 @@ public class UserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
-        UserDao userDao = new UserDaoImpl("localhost:3306", "noixforum", "wyy", "qwqwq123");
+        UserDao userDao = new UserDaoImpl();
         context.setAttribute("userDao", userDao);
         userService = new UserServiceImpl(userDao);
         context.setAttribute("userService", userService);
@@ -72,12 +72,6 @@ public class UserController extends HttpServlet {
             default:
                 resp.sendError(404);
         }
-    }
-
-    @Override
-    public void destroy() {
-        UserDao userdao = (UserDao) getServletContext().getAttribute("userDao");
-        userdao.destroy();
     }
 
     private void doLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -201,6 +195,7 @@ public class UserController extends HttpServlet {
         if (user.getErrorMsg() != null) {
             res.put("status", 0);
             res.put("errMsg", user.getErrorMsg());
+            user.setErrorMsg(null);
             resp.getWriter().write(gson.toJson(res));
             return;
         }

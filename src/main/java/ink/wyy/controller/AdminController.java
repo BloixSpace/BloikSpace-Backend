@@ -1,9 +1,9 @@
 package ink.wyy.controller;
 
 import com.google.gson.Gson;
-import ink.wyy.bean.Article;
+import ink.wyy.bean.Commodity;
 import ink.wyy.bean.User;
-import ink.wyy.service.ArticleService;
+import ink.wyy.service.CommodityService;
 import ink.wyy.service.UserService;
 
 import javax.servlet.ServletException;
@@ -18,13 +18,13 @@ import java.util.HashMap;
 public class AdminController extends HttpServlet {
 
     UserService userService;
-    ArticleService articleService;
+    CommodityService commodityService;
     Gson gson;
 
     @Override
     public void init() throws ServletException {
         userService = (UserService) getServletContext().getAttribute("userService");
-        articleService = (ArticleService) getServletContext().getAttribute("articleService");
+        commodityService = (CommodityService) getServletContext().getAttribute("commodityService");
         gson = new Gson();
     }
 
@@ -41,9 +41,11 @@ public class AdminController extends HttpServlet {
             case "/admin/deleteUser":
                 doDeleteUser(req, resp);
                 break;
-            case "/admin/deleteArticle":
-                doDeleteArticle(req, resp);
+            case "/admin/deleteCommodity":
+                doDeleteCommodity(req, resp);
                 break;
+            default:
+                resp.sendError(404);
         }
     }
 
@@ -100,30 +102,9 @@ public class AdminController extends HttpServlet {
     }
 
 
-    private void doDeleteArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doDeleteCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        HashMap<String, Object> res = new HashMap<>();
-        if (id == null || id.equals("")) {
-            res.put("status", 0);
-            res.put("errMsg", "id不能为空");
-            resp.getWriter().write(gson.toJson(res));
-            return;
-        }
-        Article article = articleService.get(Integer.valueOf(id));
-        if (article.getErrorMsg() != null) {
-            res.put("status", 0);
-            res.put("errMsg", article.getErrorMsg());
-            resp.getWriter().write(gson.toJson(res));
-            return;
-        }
-        String msg = articleService.delete(article.getId(), article.getUserId());
-        if (msg != null) {
-            res.put("status", 0);
-            res.put("errMsg", msg);
-            resp.getWriter().write(gson.toJson(res));
-            return;
-        }
-        res.put("status", 1);
-        resp.getWriter().write(gson.toJson(res));
+        String res = commodityService.delete(id, -1);
+        resp.getWriter().write(res);
     }
 }

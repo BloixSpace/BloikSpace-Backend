@@ -12,5 +12,4 @@ public interface UserDao {
     User findByUsername(String username);
     User findById(int id);
     HashMap<String, Object> getUserList(int page, int pageSize, String order, boolean desc);
-    void destroy();
 }

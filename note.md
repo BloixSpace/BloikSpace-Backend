@@ -48,7 +48,7 @@
 
 ### 文章相关
 
-- /article/add
+- /commodity/add
   - post
   - 请求字段：
     - title: 标题
@@ -60,7 +60,7 @@
     - id: 文章唯一id，仅当成功
     - errMsg: 错误信息，仅当失败
 
-- /article/getlist?page=x&category=学术。。。
+- /commodity/getlist?page=x&category=学术。。。
   - get
   - 响应字段：
     - count: 文章数量 
@@ -73,7 +73,7 @@
       - authorName: 作者
       - time: 最后修改时间
 
-- /article/get?id=x
+- /commodity/get?id=x
   - 每次访问，查看次数加一
   - get
   - 响应字段
@@ -87,7 +87,7 @@
     - time: 发布时间
     - modifyTime: 最后修改时间
 
-- /article/get_self_all?page=x
+- /commodity/get_self_all?page=x
   - get
   - 响应字段:
     - count: 数量
@@ -98,7 +98,7 @@
       - time: 发布时间
       - modifyTime: 最后修改时间
 
-- /article/set
+- /commodity/set
   - post
   - 请求字段:
     - id: 文章id
@@ -109,7 +109,7 @@
     - status: 0,1
     - errMsg: 错误信息
 
-- /article/delete?id=x
+- /commodity/delete?id=x
   - get
   - 无请求字段
   - 响应字段:

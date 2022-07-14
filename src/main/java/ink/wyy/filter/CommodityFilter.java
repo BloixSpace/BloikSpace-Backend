@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @WebFilter(
-        filterName = "filter3_articleFilter",
-        urlPatterns = "/article/*"
+        filterName = "filter3_commodityFilter",
+        urlPatterns = "/commodity/*"
 )
-public class ArticleFilter implements Filter {
+public class CommodityFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -30,9 +30,9 @@ public class ArticleFilter implements Filter {
 
         String uri = req.getRequestURI();
         switch (uri) {
-            case "/article/add":
-            case "/article/update":
-            case "/article/delete":
+            case "/commodity/add":
+            case "/commodity/update":
+            case "/commodity/delete":
                 if (session.getAttribute("user") == null) {
                     HashMap<String, Object> res = new HashMap<>();
                     Gson gson = new Gson();
@@ -43,8 +43,8 @@ public class ArticleFilter implements Filter {
                     filterChain.doFilter(req, resp);
                 }
                 break;
-            case "/article/get":
-            case "/article/list":
+            case "/commodity/get":
+            case "/commodity/list":
                 filterChain.doFilter(req, resp);
                 break;
         }

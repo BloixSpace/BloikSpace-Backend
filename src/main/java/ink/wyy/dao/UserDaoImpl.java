@@ -1,6 +1,7 @@
 package ink.wyy.dao;
 
 import ink.wyy.bean.User;
+import ink.wyy.util.C3P0Util;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,20 +10,11 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao{
 
-    private final Connection con;
-
-    public UserDaoImpl(String url, String DBName, String user, String pwd) {
-        this.con = GetDBConnection.connectDB(url, DBName, user, pwd);
-        try {
-            con.setAutoCommit(false);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
     @Override
     public String insert(User user) {
+        Connection con = C3P0Util.getConnection();
         try {
+            con.setAutoCommit(false);
             String sql = "insert into users (username, password, create_date, signature, avatar_uri, level)" +
                     " values (?,?,now(),?,?,?);";
             PreparedStatement statement = con.prepareStatement(sql);
@@ -48,12 +40,16 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return "添加错误";
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public String delete(int id) {
+        Connection con = C3P0Util.getConnection();
         try {
+            con.setAutoCommit(false);
             String sql = "delete from users where id=?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
@@ -74,13 +70,17 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return "删除失败";
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public String update(Integer id, User user) {
+        Connection con = C3P0Util.getConnection();
         String sql = "update users set username=?, password=?, signature=?, avatar_uri=?, level=? where id=?";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
@@ -105,13 +105,17 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return "更改失败";
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public String updateUserInfo(Integer id, User user) {
+        Connection con = C3P0Util.getConnection();
         String sql = "update users set signature=?, avatar_uri=? where id=?";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getSignature());
             statement.setString(2, user.getAvatarUri());
@@ -133,13 +137,17 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return "更改失败";
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public User findByUsername(String username) {
+        Connection con = C3P0Util.getConnection();
         String sql = "select * from users where username=?";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
@@ -166,13 +174,17 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return null;
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public User findById(int id) {
+        Connection con = C3P0Util.getConnection();
         String sql = "select * from users where id=?";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -199,12 +211,16 @@ public class UserDaoImpl implements UserDao{
                 System.out.println(e1);
             }
             return null;
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public HashMap<String, Object> getUserList(int page, int pageSize, String order, boolean desc) {
+        Connection con = C3P0Util.getConnection();
         try {
+            con.setAutoCommit(false);
             String sql = "select * from users order by " + order + " limit ?, ?";
             if (desc) sql = "select * from users order by " + order + " desc limit ?, ?";
             String totSql = "select count(*) from users";
@@ -248,16 +264,9 @@ public class UserDaoImpl implements UserDao{
             } catch (SQLException ee) {
                 System.out.println(ee);
             }
+        } finally {
+            C3P0Util.close(con);
         }
         return null;
-    }
-
-    @Override
-    public void destroy() {
-        try {
-            con.close();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
     }
 }

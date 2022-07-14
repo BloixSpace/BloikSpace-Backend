@@ -1,67 +1,68 @@
 package ink.wyy.dao;
 
-import ink.wyy.bean.Article;
+import ink.wyy.bean.Commodity;
+import ink.wyy.util.C3P0Util;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ArticleDaoImpl implements ArticleDao{
-    private final Connection con;
-
-    public ArticleDaoImpl(String url, String DBName, String user, String pwd) {
-        this.con = GetDBConnection.connectDB(url, DBName, user, pwd);
-        try {
-            con.setAutoCommit(false);
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
+public class CommodityDaoImpl implements CommodityDao {
 
     @Override
-    public Article add(Article article) {
-        String sql = "insert into articles (title, content, user_id, category, release_time, update_time) VALUES " +
-                "(?, ?, ?, ?, now(), now())";
+    public Commodity add(Commodity commodity) {
+        Connection con = C3P0Util.getConnection();
+        String sql = "insert into commodity (title, content, user_id, category, pic, price, release_time, update_time) VALUES " +
+                "(?, ?, ?, ?, ?, ?, now(), now())";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, article.getTitle());
-            statement.setString(2, article.getContent());
-            statement.setInt(3, article.getUserId());
-            statement.setString(4, article.getCategory());
+            statement.setString(1, commodity.getTitle());
+            statement.setString(2, commodity.getContent());
+            statement.setInt(3, commodity.getUserId());
+            statement.setString(4, commodity.getCategory());
+            statement.setString(5, commodity.getPicUri());
+            statement.setDouble(6, commodity.getPrice());
             Integer num = statement.executeUpdate();
             if (num == 1) {
                 Statement statement1 = con.createStatement();
                 ResultSet rs = statement1.executeQuery("SELECT LAST_INSERT_ID()");
                 rs.next();
-                article.setId(rs.getInt(1));
+                commodity.setId(rs.getInt(1));
                 con.commit();
             } else {
-                article.setErrorMsg("插入失败");
+                commodity.setErrorMsg("插入失败");
                 con.rollback();
             }
-            return article;
+            return commodity;
         } catch (SQLException e) {
             System.out.println(e);
-            article.setErrorMsg("插入失败");
+            commodity.setErrorMsg("插入失败");
             try {
                 con.rollback();
             } catch (SQLException e1) {
                 System.out.println(e1);
             }
-            return article;
+            return commodity;
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
-    public String update(Article article) {
-        String sql = "update articles set title=?, content=?, category=?, update_time=now() where id=?";
+    public String update(Commodity commodity) {
+        Connection con = C3P0Util.getConnection();
+        String sql = "update commodity set title=?, content=?, category=?, pic=?, price=? where id=?";
         try {
+            con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
-            statement.setString(1, article.getTitle());
-            statement.setString(2, article.getContent());
-            statement.setString(3, article.getCategory());
-            statement.setInt(4, article.getId());
+            statement.setString(1, commodity.getTitle());
+            statement.setString(2, commodity.getContent());
+            statement.setString(3, commodity.getCategory());
+            statement.setString(4, commodity.getPicUri());
+            statement.setDouble(5, commodity.getPrice());
+            statement.setInt(6, commodity.getId());
             Integer num = statement.executeUpdate();
             if (num == 1) {
                 con.commit();
@@ -78,13 +79,17 @@ public class ArticleDaoImpl implements ArticleDao{
                 System.out.println(e1);
             }
             return "更新失败";
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
     public Boolean delete(Integer id) {
-        String sql = "delete from articles where id=" + id.toString();
+        Connection con = C3P0Util.getConnection();
+        String sql = "delete from commodity where id=" + id.toString();
         try {
+            con.setAutoCommit(false);
             Statement statement = con.createStatement();
             Integer num = statement.executeUpdate(sql);
             if (num == 1) {
@@ -102,13 +107,17 @@ public class ArticleDaoImpl implements ArticleDao{
                 System.out.println(e1);
             }
             return false;
+        } finally {
+            C3P0Util.close(con);
         }
     }
 
     @Override
-    public Article findById(Integer id) {
-        String sql = "select * from articles where id=" + id.toString();
+    public Commodity findById(Integer id) {
+        Connection con = C3P0Util.getConnection();
+        String sql = "select * from commodity where id=" + id.toString();
         try {
+            con.setAutoCommit(false);
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             if (!rs.next()) {
@@ -120,14 +129,18 @@ public class ArticleDaoImpl implements ArticleDao{
             String category = rs.getString("category");
             String createDate = rs.getString("release_time");
             String updateDate = rs.getString("update_time");
+            String picUri = rs.getString("pic");
+            Double price = rs.getDouble("price");
             Integer userId = rs.getInt("user_id");
-            Article article = new Article(title, content, category);
-            article.setId(id);
-            article.setUserId(userId);
-            article.setCreateDate(createDate);
-            article.setUpdateDate(updateDate);
+            Commodity commodity = new Commodity(title, content, category);
+            commodity.setId(id);
+            commodity.setPicUri(picUri);
+            commodity.setUserId(userId);
+            commodity.setCreateDate(createDate);
+            commodity.setUpdateDate(updateDate);
+            commodity.setPrice(price);
             con.commit();
-            return article;
+            return commodity;
         } catch (SQLException e) {
             System.out.println(e);
             try {
@@ -135,15 +148,19 @@ public class ArticleDaoImpl implements ArticleDao{
             } catch (SQLException e1) {
                 System.out.println(e1);
             }
+        } finally {
+            C3P0Util.close(con);
         }
         return null;
     }
 
     @Override
     public HashMap<String, Object> getList(int page, int pageSize, String order, String category, Integer userId) {
+        Connection con = C3P0Util.getConnection();
         try {
-            String sql = "select id, title, category, release_time, update_time, user_id from articles where ";
-            String totSql = "select count(*) as cnt from articles where ";
+            con.setAutoCommit(false);
+            String sql = "select id, title, pic, price, category, release_time, update_time, user_id from commodity where ";
+            String totSql = "select count(*) as cnt from commodity where ";
             int bias = 0;
             if (category != null) {
                 sql += "category=?";
@@ -193,6 +210,8 @@ public class ArticleDaoImpl implements ArticleDao{
                 String category1 = rs.getString("category");
                 String releaseTime = rs.getString("release_time");
                 String updateTime = rs.getString("update_time");
+                String picUri = rs.getString("pic");
+                Double price = rs.getDouble("price");
                 int userId1 = rs.getInt("user_id");
                 HashMap<String, Object> thisMap = new HashMap<>();
                 thisMap.put("id", id);
@@ -200,11 +219,13 @@ public class ArticleDaoImpl implements ArticleDao{
                 thisMap.put("release_time", releaseTime);
                 thisMap.put("update_time", updateTime);
                 thisMap.put("title", title);
+                thisMap.put("pic", picUri);
+                thisMap.put("price", price);
                 thisMap.put("user_id", userId1);
                 list.add(thisMap);
             }
             map.put("num", num);
-            map.put("articles", list);
+            map.put("commodities", list);
             con.commit();
             return map;
         } catch (SQLException e) {
@@ -214,6 +235,8 @@ public class ArticleDaoImpl implements ArticleDao{
             } catch (SQLException e1) {
                 System.out.println(e1);
             }
+        } finally {
+            C3P0Util.close(con);
         }
         return null;
     }

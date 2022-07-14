@@ -1,8 +1,6 @@
 package ink.wyy.bean;
 
-import java.sql.Date;
-
-public class Article {
+public class Commodity {
 
     private Integer id;
     private String title;
@@ -11,6 +9,24 @@ public class Article {
     private String category;
     private String createDate;
     private String updateDate;
+    private String picUri;
+    private Double price;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getPicUri() {
+        return picUri;
+    }
+
+    public void setPicUri(String picUri) {
+        this.picUri = picUri;
+    }
 
     public String getCreateDate() {
         return createDate;
@@ -78,18 +94,18 @@ public class Article {
         this.category = category;
     }
 
-    public Article(Integer id, String title, String content, String category) {
+    public Commodity(Integer id, String title, String content, String category) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.category = category;
     }
 
-    public Article(String title, String content, String category) {
+    public Commodity(String title, String content, String category) {
         this.category = category;
         this.title = title;
         this.content = content;
     }
 
-    public Article(){}
+    public Commodity(){}
 }
