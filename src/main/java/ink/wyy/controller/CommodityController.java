@@ -79,12 +79,15 @@ public class CommodityController extends HttpServlet {
         String category = req.getParameter("category");
         String picUri = req.getParameter("pic");
         String s_price = req.getParameter("price");
+        String s_stock = req.getParameter("stock");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
 
         Commodity commodity = new Commodity(title, content, category);
         commodity.setUserId(user.getId());
         commodity.setPicUri(picUri);
+        commodity.setPrice(Double.valueOf(s_price));
+        commodity.setStock(Integer.valueOf(s_stock));
         if (s_price != null) {
             commodity.setPrice(Double.valueOf(s_price));
         }

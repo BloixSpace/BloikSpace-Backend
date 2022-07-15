@@ -53,4 +53,12 @@
     <filter-name>followFilter</filter-name>
     <url-pattern>/follow/*</url-pattern>
   </filter-mapping>
+  <filter>
+    <filter-name>orderFilter</filter-name>
+    <filter-class>ink.wyy.filter.OrderFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>orderFilter</filter-name>
+    <url-pattern>/order/*</url-pattern>
+  </filter-mapping>
 </web-app>

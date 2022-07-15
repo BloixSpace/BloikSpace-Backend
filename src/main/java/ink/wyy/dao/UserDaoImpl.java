@@ -15,7 +15,7 @@ public class UserDaoImpl implements UserDao{
         Connection con = C3P0Util.getConnection();
         try {
             con.setAutoCommit(false);
-            String sql = "insert into users (username, password, create_date, signature, avatar_uri, level)" +
+            String sql = "insert into tb_user (username, password, create_date, signature, avatar_uri, level)" +
                     " values (?,?,now(),?,?,?);";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getUsername());
@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDao{
         Connection con = C3P0Util.getConnection();
         try {
             con.setAutoCommit(false);
-            String sql = "delete from users where id=?";
+            String sql = "delete from tb_user where id=?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
             int num = statement.executeUpdate();
@@ -78,7 +78,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String update(Integer id, User user) {
         Connection con = C3P0Util.getConnection();
-        String sql = "update users set username=?, password=?, signature=?, avatar_uri=?, level=? where id=?";
+        String sql = "update tb_user set username=?, password=?, signature=?, avatar_uri=?, level=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
@@ -113,7 +113,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String updateUserInfo(Integer id, User user) {
         Connection con = C3P0Util.getConnection();
-        String sql = "update users set signature=?, avatar_uri=? where id=?";
+        String sql = "update tb_user set signature=?, avatar_uri=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
@@ -145,7 +145,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public User findByUsername(String username) {
         Connection con = C3P0Util.getConnection();
-        String sql = "select * from users where username=?";
+        String sql = "select * from tb_user where username=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
@@ -182,7 +182,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public User findById(int id) {
         Connection con = C3P0Util.getConnection();
-        String sql = "select * from users where id=?";
+        String sql = "select * from tb_user where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
@@ -221,9 +221,9 @@ public class UserDaoImpl implements UserDao{
         Connection con = C3P0Util.getConnection();
         try {
             con.setAutoCommit(false);
-            String sql = "select * from users order by " + order + " limit ?, ?";
-            if (desc) sql = "select * from users order by " + order + " desc limit ?, ?";
-            String totSql = "select count(*) from users";
+            String sql = "select * from tb_user order by " + order + " limit ?, ?";
+            if (desc) sql = "select * from tb_user order by " + order + " desc limit ?, ?";
+            String totSql = "select count(*) from tb_user";
             Statement statement1 = con.createStatement();
 
             ResultSet resultSet = statement1.executeQuery(totSql);

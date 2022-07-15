@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
     User login(String username, String password);
-    User register(String username, String password);
+    User register(String username, String password, String role);
     User UserSetUserInfo(User user);
     User AdminSetUserInfo(HttpServletRequest req);
     User getUser(User user);

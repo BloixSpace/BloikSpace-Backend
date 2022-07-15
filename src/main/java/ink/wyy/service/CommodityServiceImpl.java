@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class CommodityServiceImpl implements CommodityService {
 
-    private CommodityDao commodityDao;
-    private Gson gson;
+    private final CommodityDao commodityDao;
+    private final Gson gson;
 
     public CommodityServiceImpl(CommodityDao commodityDao) {
         this.commodityDao = commodityDao;
@@ -32,6 +32,10 @@ public class CommodityServiceImpl implements CommodityService {
         }
         if (commodity.getPrice() == null || commodity.getPrice() == 0) {
             res.put("errMsg", "price不能为空");
+            return gson.toJson(res);
+        }
+        if (commodity.getStock() == null || commodity.getStock() == 0) {
+            res.put("errMsg", "stock不能为空");
             return gson.toJson(res);
         }
         commodity = commodityDao.add(commodity);
@@ -66,7 +70,8 @@ public class CommodityServiceImpl implements CommodityService {
         String content = req.getParameter("content");
         String category = req.getParameter("category");
         String picUri = req.getParameter("pic");
-        String  s_price = req.getParameter("price");
+        String s_price = req.getParameter("price");
+        String s_stock = req.getParameter("stock");
         if (title != null && !title.equals("")) {
             commodity.setTitle(title);
         }
@@ -81,6 +86,9 @@ public class CommodityServiceImpl implements CommodityService {
         }
         if (s_price != null && !s_price.equals("")) {
             commodity.setPrice(Double.valueOf(s_price));
+        }
+        if (s_stock != null && !s_stock.equals("")) {
+            commodity.setStock(Integer.valueOf(s_stock));
         }
         String msg = commodityDao.update(commodity);
         if (msg == null) {
@@ -144,6 +152,7 @@ public class CommodityServiceImpl implements CommodityService {
         res.put("user_id", commodity.getUserId());
         res.put("pic", commodity.getPicUri());
         res.put("price", commodity.getPrice());
+        res.put("stock", commodity.getStock());
         res.put("release_time", commodity.getCreateDate());
         res.put("update_time", commodity.getUpdateDate());
         return gson.toJson(res);

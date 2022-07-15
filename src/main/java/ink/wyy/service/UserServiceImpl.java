@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao;
-    private Gson gson;
+    private final UserDao userDao;
+    private final Gson gson;
 
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(String username, String password) {
+    public User register(String username, String password, String role) {
         if (userDao.findByUsername(username) != null) {
             User user = new User();
             user.setErrorMsg("用户名已被使用");
@@ -42,7 +42,14 @@ public class UserServiceImpl implements UserService {
         User user = new User(username, password);
         user.setSignature("这个用户太懒，还没有签名。");
         user.setAvatarUri("/img/logo.jpg");
-        user.setLevel(1);
+        if (role.equals("buyer")) {
+            user.setLevel(1);
+        } else if (role.equals("seller")) {
+            user.setLevel(2);
+        } else {
+            user.setErrorMsg("角色设置错误");
+            return user;
+        }
         String errorMsg = userDao.insert(user);
         user = login(username, password);
         user.setErrorMsg(errorMsg);
@@ -136,7 +143,7 @@ public class UserServiceImpl implements UserService {
         if (password == null || password.equals("")) {
             password = "12345678";
         }
-        User user = register(username, password);
+        User user = register(username, password, "buyer");
         if (user.getErrorMsg() != null) {
             return user;
         }

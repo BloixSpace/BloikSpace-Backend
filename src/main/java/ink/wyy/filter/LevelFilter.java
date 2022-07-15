@@ -22,7 +22,7 @@ public class LevelFilter implements Filter {
             User user = (User) req.getSession().getAttribute("user");
             if (user == null) {
                 resp.getWriter().write("{\"status\":0,\"errMsg\":\"未登录\"}");
-            } else if (user.getLevel() >= 2) {
+            } else if (user.getLevel() >= 3) {
                 filterChain.doFilter(req, resp);
             } else {
                 resp.getWriter().write("{\"status\":0,\"errMsg\":\"无操作权限\"}");

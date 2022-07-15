@@ -10,5 +10,7 @@ public interface CommodityDao {
     Boolean delete(Integer id);
     Commodity findById(Integer id);
 
+    String buy(Integer id, Integer num);
+
     HashMap<String, Object> getList(int page, int pageSize, String order, String category, Integer userId);
 }

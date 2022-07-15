@@ -1,6 +1,7 @@
 package ink.wyy.filter;
 
 import com.google.gson.Gson;
+import ink.wyy.bean.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -10,10 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 
-@WebFilter(
-        filterName = "filter3_commodityFilter",
-        urlPatterns = "/commodity/*"
-)
 public class CommodityFilter implements Filter {
 
     @Override
@@ -33,16 +30,25 @@ public class CommodityFilter implements Filter {
             case "/commodity/add":
             case "/commodity/update":
             case "/commodity/delete":
-                if (session.getAttribute("user") == null) {
+                User user = (User) session.getAttribute("user");
+                if (user == null) {
                     HashMap<String, Object> res = new HashMap<>();
                     Gson gson = new Gson();
                     res.put("status", 0);
                     res.put("errMsg", "未登录");
                     resp.getWriter().write(gson.toJson(res));
-                } else {
+                    return;
+                } else if (user.getLevel() >= 2) {
                     filterChain.doFilter(req, resp);
+                    return;
+                } else {
+                    HashMap<String, Object> res = new HashMap<>();
+                    Gson gson = new Gson();
+                    res.put("status", 0);
+                    res.put("errMsg", "无操作权限");
+                    resp.getWriter().write(gson.toJson(res));
+                    return;
                 }
-                break;
             case "/commodity/get":
             case "/commodity/list":
                 filterChain.doFilter(req, resp);

@@ -11,6 +11,15 @@ public class Commodity {
     private String updateDate;
     private String picUri;
     private Double price;
+    private Integer stock;
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 
     public Double getPrice() {
         return price;

@@ -113,6 +113,7 @@ public class UserController extends HttpServlet {
         HttpSession session = req.getSession();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String role = req.getParameter("role");
         HashMap<String, Object> res = new HashMap<>();
 
         if (session.getAttribute("user") != null) {
@@ -128,7 +129,7 @@ public class UserController extends HttpServlet {
             writer.write(gson.toJson(res));
             return;
         }
-        User user = userService.register(username, password);
+        User user = userService.register(username, password, role);
         if (user.getErrorMsg() != null) {
             res.put("status", 0);
             res.put("errMsg", user.getErrorMsg());

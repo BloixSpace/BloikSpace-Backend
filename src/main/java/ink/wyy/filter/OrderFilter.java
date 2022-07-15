@@ -1,12 +1,13 @@
 package ink.wyy.filter;
 
+import ink.wyy.bean.User;
+
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserFilter implements Filter {
+public class OrderFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -17,20 +18,28 @@ public class UserFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
+        User user = (User) req.getSession().getAttribute("user");
+
+        if (user == null) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"未登录\"}");
+            return;
+        }
+
         String uri = req.getRequestURI();
         switch (uri) {
-            case "/user/login":
-            case "/user/register":
-            case "/user/getUserList":
-                chain.doFilter(req, resp);
-                break;
-            default:
-                if (req.getSession().getAttribute("user") != null) {
+            case "/order/add":
+            case "/order/queryList":
+                if (user.getLevel() == 1) {
                     chain.doFilter(req, resp);
                 } else {
-                    resp.getWriter().write("{\"status\":0,\"errMsg\":\"未登录\"}");
+                    resp.getWriter().write("{\"status\":0,\"errMsg\":\"无操作权限\"}");
                 }
+                return;
+            default:
+                chain.doFilter(req, resp);
         }
+
+
     }
 
     @Override

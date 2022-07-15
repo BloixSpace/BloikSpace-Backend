@@ -21,7 +21,7 @@ public class FollowDaoImpl implements FollowDao{
     @Override
     public Boolean add(Integer userId, Integer followId) {
         try {
-            String sql = "insert into follower (user_id, follow_id) values (?, ?);";
+            String sql = "insert into tb_follower (user_id, follow_id) values (?, ?);";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, userId);
             statement.setInt(2, followId);
@@ -47,7 +47,7 @@ public class FollowDaoImpl implements FollowDao{
     @Override
     public Boolean del(Integer userId, Integer followId) {
         try {
-            String sql = "delete from follower where user_id=? and follow_id=?";
+            String sql = "delete from tb_follower where user_id=? and follow_id=?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, userId);
             statement.setInt(2, followId);
@@ -73,8 +73,8 @@ public class FollowDaoImpl implements FollowDao{
     @Override
     public HashMap<String, Object> findFans(Integer userId, Integer page, Integer pageSize) {
         try {
-            String sql = "select user_id from follower where follow_id=? order by user_id limit ?, ?";
-            String totSql = "select count(*) from follower where follow_id=" + userId;
+            String sql = "select user_id from tb_follower where follow_id=? order by user_id limit ?, ?";
+            String totSql = "select count(*) from tb_follower where follow_id=" + userId;
             PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setInt(1, userId);
@@ -128,8 +128,8 @@ public class FollowDaoImpl implements FollowDao{
     @Override
     public HashMap<String, Object> findFollowers(Integer userId, Integer page, Integer pageSize) {
         try {
-            String sql = "select follow_id from follower where user_id=? order by follow_id limit ?, ?";
-            String totSql = "select count(*) from follower where user_id=" + userId;
+            String sql = "select follow_id from tb_follower where user_id=? order by follow_id limit ?, ?";
+            String totSql = "select count(*) from tb_follower where user_id=" + userId;
             PreparedStatement statement = con.prepareStatement(sql);
 
             statement.setInt(1, userId);
@@ -189,7 +189,7 @@ public class FollowDaoImpl implements FollowDao{
     @Override
     public Boolean exist(Integer userId, Integer followId) {
         try {
-            String sql = "select count(*) from follower where user_id=? and follow_id=?";
+            String sql = "select count(*) from tb_follower where user_id=? and follow_id=?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, userId);
             statement.setInt(2, followId);
@@ -197,11 +197,7 @@ public class FollowDaoImpl implements FollowDao{
             rs.next();
             int num = rs.getInt(1);
             con.commit();
-            if (num != 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return num != 0;
         } catch (SQLException e) {
             System.out.println(e);
             try {
