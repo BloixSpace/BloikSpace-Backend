@@ -87,6 +87,10 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", "已发货，请联系卖家删除订单");
             return gson.toJson(res);
         }
+        if (userId != -1 && !userId.equals(commodity.getUserId()) && order.getReceiptTime() != null) {
+            res.put("errMsg", "已确认收货，无法删除订单");
+            return gson.toJson(res);
+        }
         String msg = orderDao.delete(id);
         if (msg != null) {
             res.put("errMsg", msg);
@@ -114,6 +118,10 @@ public class OrderServiceImpl implements OrderService {
         }
         if (userId != -1 && oldOrder.getShip()) {
             res.put("errMsg", "已发货，请联系卖家修改订单");
+            return gson.toJson(res);
+        }
+        if (userId != -1 && oldOrder.getReceiptTime() != null) {
+            res.put("errMsg", "已确认收获，无法修改订单");
             return gson.toJson(res);
         }
         if (order.getPhone() != null && !order.getPhone().equals("")) {
@@ -168,6 +176,32 @@ public class OrderServiceImpl implements OrderService {
             return gson.toJson(res);
         }
         String msg = orderDao.ship(id);
+        if (msg != null) {
+            res.put("errMsg", msg);
+            return gson.toJson(res);
+        }
+        res.put("status", 1);
+        return gson.toJson(res);
+    }
+
+    @Override
+    public String receipt(Integer id, Integer userId) {
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("status", 0);
+        Order order = orderDao.findById(id);
+        if (order == null) {
+            res.put("errMsg", "订单不存在");
+            return gson.toJson(res);
+        }
+        if (order.getReceiptTime() != null) {
+            res.put("errMsg", "已确认收货，不能重复确认");
+            return gson.toJson(res);
+        }
+        if (!userId.equals(order.getUserId())) {
+            res.put("errMsg", "无操作权限");
+            return gson.toJson(res);
+        }
+        String msg = orderDao.receipt(id);
         if (msg != null) {
             res.put("errMsg", msg);
             return gson.toJson(res);

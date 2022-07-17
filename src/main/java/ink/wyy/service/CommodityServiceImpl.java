@@ -6,6 +6,7 @@ import ink.wyy.dao.CommodityDao;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class CommodityServiceImpl implements CommodityService {
@@ -49,10 +50,10 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
-    public String update(HttpServletRequest req, Integer userId) {
+    public String update(Map<String, String> req, Integer userId) {
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", 0);
-        String id = req.getParameter("id");
+        String id = req.get("id");
         if (id == null) {
             res.put("errMsg", "id不能为空");
             return gson.toJson(res);
@@ -66,12 +67,12 @@ public class CommodityServiceImpl implements CommodityService {
             res.put("errMsg", "无操作权限");
             return gson.toJson(res);
         }
-        String title = req.getParameter("title");
-        String content = req.getParameter("content");
-        String category = req.getParameter("category");
-        String picUri = req.getParameter("pic");
-        String s_price = req.getParameter("price");
-        String s_stock = req.getParameter("stock");
+        String title = req.get("title");
+        String content = req.get("content");
+        String category = req.get("category");
+        String picUri = req.get("pic");
+        String s_price = req.get("price");
+        String s_stock = req.get("stock");
         if (title != null && !title.equals("")) {
             commodity.setTitle(title);
         }

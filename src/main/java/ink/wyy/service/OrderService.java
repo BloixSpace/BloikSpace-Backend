@@ -14,5 +14,7 @@ public interface OrderService {
 
     String ship(Integer id, Integer userId);
 
+    String receipt(Integer id, Integer userId);
+
     String getOrderList(int page, int pageSize, String order, Integer userId, Integer commodityId, Integer sellerId, Boolean isShip);
 }

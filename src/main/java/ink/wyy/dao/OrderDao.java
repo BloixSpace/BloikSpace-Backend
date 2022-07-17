@@ -14,6 +14,8 @@ public interface OrderDao {
 
     String ship(Integer id);
 
+    String receipt(Integer id);
+
     Order findById(Integer id);
 
     HashMap<String, Object> getOrderList(int page, int pageSize, String order, Integer userId, Integer commodityId, Integer seller_id, Boolean isShip);

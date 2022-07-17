@@ -29,6 +29,7 @@ public class OrderFilter implements Filter {
         switch (uri) {
             case "/order/add":
             case "/order/queryList":
+            case "/order/receipt":
                 if (user.getLevel() == 1) {
                     chain.doFilter(req, resp);
                 } else {

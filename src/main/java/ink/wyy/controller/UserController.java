@@ -6,6 +6,7 @@ import ink.wyy.dao.UserDao;
 import ink.wyy.dao.UserDaoImpl;
 import ink.wyy.service.UserService;
 import ink.wyy.service.UserServiceImpl;
+import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(value = "/user/*", loadOnStartup = 1)
 public class UserController extends HttpServlet {
@@ -37,19 +39,25 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HashMap<String, String> request = JsonUtil.jsonToMap(req);
+        if (request == null) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"请求有误\"}");
+            return;
+        }
+
         String uri = req.getRequestURI();
         switch (uri) {
             case "/user/login":
-                doLogin(req, resp);
+                doLogin(req, resp, request);
                 break;
             case "/user/register":
-                doRegister(req, resp);
+                doRegister(req, resp, request);
                 break;
             case "/user/setUserInfo":
-                doSetUserInfo(req, resp);
+                doSetUserInfo(req, resp, request);
                 break;
             case "/user/updatePassword":
-                doUpdatePassword(req, resp);
+                doUpdatePassword(req, resp, request);
                 break;
             default:
                 resp.sendError(404);
@@ -74,12 +82,18 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void doLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doLogin(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
         HttpSession session = req.getSession();
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
         HashMap<String, Object> res = new HashMap<>();
+        if (request == null) {
+            res.put("status", 0);
+            res.put("errMsg", "请求有误");
+            writer.write(gson.toJson(res));
+            return;
+        }
+        String username = request.get("username");
+        String password = request.get("password");
 
         if (session.getAttribute("user") != null) {
             res.put("status", 0);
@@ -108,12 +122,12 @@ public class UserController extends HttpServlet {
         writer.write(gson.toJson(res));
     }
 
-    private void doRegister(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void doRegister(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
         HttpSession session = req.getSession();
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        String role = req.getParameter("role");
+        String username = request.get("username");
+        String password = request.get("password");
+        String role = request.get("role");
         HashMap<String, Object> res = new HashMap<>();
 
         if (session.getAttribute("user") != null) {
@@ -123,7 +137,8 @@ public class UserController extends HttpServlet {
             return;
         }
         if (username == null || username.equals("") ||
-                password == null || password.equals("")) {
+                password == null || password.equals("") ||
+                role == null || role.equals("")) {
             res.put("status", 0);
             res.put("errMsg", "用户名和密码不能为空");
             writer.write(gson.toJson(res));
@@ -163,14 +178,14 @@ public class UserController extends HttpServlet {
         if (session.getAttribute("user") != null) {
             session.removeAttribute("user");
         }
-        resp.sendRedirect("/");
+        resp.getWriter().write("{\"status\":1}");
     }
 
-    private void doSetUserInfo(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+    private void doSetUserInfo(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request)  throws ServletException, IOException {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
-        user.setSignature(req.getParameter("signature"));
-        user.setAvatarUri(req.getParameter("avatarUri"));
+        user.setSignature(request.get("signature"));
+        user.setAvatarUri(request.get("avatar_uri"));
         user = userService.UserSetUserInfo(user);
         session.setAttribute("user", user);
 
@@ -179,9 +194,9 @@ public class UserController extends HttpServlet {
         resp.getWriter().write(gson.toJson(res));
     }
 
-    private void doUpdatePassword(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
-        String oldPwd = req.getParameter("oldPassword");
-        String newPwd = req.getParameter("newPassword");
+    private void doUpdatePassword(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request)  throws ServletException, IOException {
+        String oldPwd = request.get("oldPassword");
+        String newPwd = request.get("newPassword");
 
         HashMap<String, Object> res = new HashMap<>();
         HttpSession session = req.getSession();

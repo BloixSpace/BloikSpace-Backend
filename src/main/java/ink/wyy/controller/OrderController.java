@@ -6,6 +6,7 @@ import ink.wyy.dao.OrderDao;
 import ink.wyy.dao.OrderDaoImpl;
 import ink.wyy.service.OrderService;
 import ink.wyy.service.OrderServiceImpl;
+import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/order/*")
 public class OrderController extends HttpServlet {
@@ -31,19 +34,28 @@ public class OrderController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HashMap<String, String> request = JsonUtil.jsonToMap(req);
+        if (request == null) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"请求有误\"}");
+            return;
+        }
+
         String uri = req.getRequestURI();
         switch (uri) {
             case "/order/add":
-                doAdd(req, resp);
+                doAdd(req, resp, request);
                 break;
             case "/order/delete":
-                doDeleteOrder(req, resp);
+                doDeleteOrder(req, resp, request);
                 break;
             case "/order/update":
-                doUpdate(req, resp);
+                doUpdate(req, resp, request);
                 break;
             case "/order/ship":
-                doShip(req, resp);
+                doShip(req, resp, request);
+                break;
+            case "/order/receipt":
+                doReceipt(req, resp, request);
                 break;
             default:
                 resp.sendError(404);
@@ -68,12 +80,12 @@ public class OrderController extends HttpServlet {
         }
     }
 
-    private void doAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String s_commodityId = req.getParameter("id");
-        String address = req.getParameter("address");
-        String phone = req.getParameter("phone");
-        String nickname = req.getParameter("nickname");
-        String remark = req.getParameter("remark");
+    private void doAdd(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String s_commodityId = request.get("id");
+        String address = request.get("address");
+        String phone = request.get("phone");
+        String nickname = request.get("nickname");
+        String remark = request.get("remark");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (s_commodityId == null || s_commodityId.equals("")) {
@@ -92,8 +104,8 @@ public class OrderController extends HttpServlet {
         resp.getWriter().write(res);
     }
 
-    private void doDeleteOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String s_id = req.getParameter("id");
+    private void doDeleteOrder(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String s_id = request.get("id");
         User user = (User) req.getSession().getAttribute("user");
         if (s_id == null || s_id.equals("")) {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
@@ -104,12 +116,12 @@ public class OrderController extends HttpServlet {
         resp.getWriter().write(res);
     }
 
-    private void doUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String s_id = req.getParameter("id");
-        String phone = req.getParameter("phone");
-        String address = req.getParameter("address");
-        String nickname = req.getParameter("nickname");
-        String remark = req.getParameter("remark");
+    private void doUpdate(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String s_id = request.get("id");
+        String phone = request.get("phone");
+        String address = request.get("address");
+        String nickname = request.get("nickname");
+        String remark = request.get("remark");
         User user = (User) req.getSession().getAttribute("user");
         if (s_id == null || s_id.equals("")) {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
@@ -126,8 +138,8 @@ public class OrderController extends HttpServlet {
         resp.getWriter().write(res);
     }
 
-    private void doShip(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String s_id = req.getParameter("id");
+    private void doShip(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String s_id = request.get("id");
         User user = (User) req.getSession().getAttribute("user");
         if (s_id == null || s_id.equals("")) {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
@@ -135,6 +147,18 @@ public class OrderController extends HttpServlet {
         }
         Integer id = Integer.valueOf(s_id);
         String res = orderService.ship(id, user.getId());
+        resp.getWriter().write(res);
+    }
+
+    private void doReceipt(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String s_id = request.get("id");
+        User user = (User) req.getSession().getAttribute("user");
+        if (s_id == null || s_id.equals("")) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
+            return;
+        }
+        Integer id = Integer.valueOf(s_id);
+        String res = orderService.receipt(id, user.getId());
         resp.getWriter().write(res);
     }
 

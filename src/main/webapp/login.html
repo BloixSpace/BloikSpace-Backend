@@ -5,10 +5,18 @@
     <title>Title</title>
 </head>
 <body>
-    <form action="/user/login" method="post">
-        username:<input type="text" name="username">
-        password:<input type="password" name="password">
-        <input type="submit" value="提交">
-    </form>
+    <script>
+        var data = new FormData();
+        data.append('username', 'buyer');
+        data.append('password', '123');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8081/user/login', true);
+        xhr.onload = function () {
+            // do something to response
+            console.log(this.responseText);
+        };
+        xhr.send(data);
+    </script>
 </body>
 </html>

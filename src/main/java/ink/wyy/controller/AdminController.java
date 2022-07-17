@@ -5,6 +5,7 @@ import ink.wyy.bean.Commodity;
 import ink.wyy.bean.User;
 import ink.wyy.service.CommodityService;
 import ink.wyy.service.UserService;
+import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/admin/*")
 public class AdminController extends HttpServlet {
@@ -30,27 +32,33 @@ public class AdminController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HashMap<String, String> request = JsonUtil.jsonToMap(req);
+        if (request == null) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"请求有误\"}");
+            return;
+        }
+
         String uri = req.getRequestURI();
         switch (uri) {
             case "/admin/setUserInfo":
-                doSetUserInfo(req, resp);
+                doSetUserInfo(req, resp, request);
                 break;
             case "/admin/addUser":
-                doAddUser(req, resp);
+                doAddUser(req, resp, request);
                 break;
             case "/admin/deleteUser":
-                doDeleteUser(req, resp);
+                doDeleteUser(req, resp, request);
                 break;
             case "/admin/deleteCommodity":
-                doDeleteCommodity(req, resp);
+                doDeleteCommodity(req, resp, request);
                 break;
             default:
                 resp.sendError(404);
         }
     }
 
-    private void doSetUserInfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = userService.AdminSetUserInfo(req);
+    private void doSetUserInfo(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        User user = userService.AdminSetUserInfo(request);
 
         HashMap<String, Object> res = new HashMap<>();
 
@@ -65,8 +73,8 @@ public class AdminController extends HttpServlet {
         resp.getWriter().write(gson.toJson(res));
     }
 
-    private void doAddUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = userService.addUser(req);
+    private void doAddUser(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        User user = userService.addUser(request);
 
         HashMap<String, Object> res = new HashMap<>();
         if (user.getErrorMsg() != null) {
@@ -81,8 +89,8 @@ public class AdminController extends HttpServlet {
         resp.getWriter().write(gson.toJson(res));
     }
 
-    private void doDeleteUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+    private void doDeleteUser(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String id = request.get("id");
         HashMap<String, Object> res = new HashMap<>();
         if (id == null || id.equals("")) {
             res.put("status", 0);
@@ -102,8 +110,8 @@ public class AdminController extends HttpServlet {
     }
 
 
-    private void doDeleteCommodity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+    private void doDeleteCommodity(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        String id = request.get("id");
         String res = commodityService.delete(id, -1);
         resp.getWriter().write(res);
     }

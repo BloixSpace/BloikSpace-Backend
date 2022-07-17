@@ -35,8 +35,19 @@ public class Order {
 
     private String errorMsg;
 
+    public String getReceiptTime() {
+        return receiptTime;
+    }
+
+    public void setReceiptTime(String receiptTime) {
+        this.receiptTime = receiptTime;
+    }
+
     @SerializedName("seller_id")
     private Integer sellerId;
+
+    @SerializedName("receipt_time")
+    private String receiptTime;
 
     public Integer getSellerId() {
         return sellerId;

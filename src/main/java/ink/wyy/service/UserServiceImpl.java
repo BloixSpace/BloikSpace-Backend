@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.UserDao;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 
 public class UserServiceImpl implements UserService {
 
@@ -74,14 +74,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User AdminSetUserInfo(HttpServletRequest req) {
-        String sss = req.getParameter("id");
+    public User AdminSetUserInfo(Map<String, String> req) {
+        String sss = req.get("id");
         Integer id = null;
         if (sss != null && !sss.equals("")) {
-            id = Integer.valueOf(req.getParameter("id"));
-        }
-        if (id == null || id.equals(0)) {
-            id = (Integer) req.getAttribute("id");
+            id = Integer.valueOf(req.get("id"));
         }
         if (id == null || id.equals(0)) {
             User user = new User();
@@ -94,13 +91,13 @@ public class UserServiceImpl implements UserService {
             newUser.setErrorMsg("用户不存在");
             return newUser;
         }
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        String avatarUri = req.getParameter("avatarUri");
-        String signature = req.getParameter("signature");
+        String username = req.get("username");
+        String password = req.get("password");
+        String avatarUri = req.get("avatarUri");
+        String signature = req.get("signature");
         Integer level = null;
-        if (req.getParameter("level") != null && !req.getParameter("level").equals("")) {
-            level = Integer.valueOf(req.getParameter("level"));
+        if (req.get("level") != null && !req.get("level").equals("")) {
+            level = Integer.valueOf(req.get("level"));
         }
         if (username != null && !username.equals("")) {
             newUser.setUsername(username);
@@ -132,14 +129,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(HttpServletRequest req) {
-        String username = req.getParameter("username");
+    public User addUser(Map<String, String> req) {
+        String username = req.get("username");
         if (username == null || username.equals("")) {
             User user = new User();
             user.setErrorMsg("用户名不能为空");
             return user;
         }
-        String password = req.getParameter("password");
+        String password = req.get("password");
         if (password == null || password.equals("")) {
             password = "12345678";
         }
@@ -147,7 +144,7 @@ public class UserServiceImpl implements UserService {
         if (user.getErrorMsg() != null) {
             return user;
         }
-        req.setAttribute("id", user.getId());
+        req.put("id", user.getId().toString());
         user = AdminSetUserInfo(req);
         return user;
     }
