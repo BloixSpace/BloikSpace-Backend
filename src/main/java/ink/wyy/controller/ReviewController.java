@@ -51,6 +51,8 @@ public class ReviewController extends HttpServlet {
             case "/review/update":
                 doUpdate(req, resp, request);
                 break;
+            default:
+                resp.sendError(404);
         }
     }
 
@@ -61,6 +63,8 @@ public class ReviewController extends HttpServlet {
             case "/review/getList":
                 doGetList(req, resp);
                 break;
+            default:
+                resp.sendError(404);
         }
     }
 

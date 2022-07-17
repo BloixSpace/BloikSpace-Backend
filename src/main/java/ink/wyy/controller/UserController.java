@@ -193,7 +193,7 @@ public class UserController extends HttpServlet {
             } else if (role.equals("seller")) {
                 user.setLevel(2);
             } else {
-                resp.getWriter().write("\"status\":0,\"errMsg\":\"角色设置错误\"");
+                resp.getWriter().write("{\"status\":0,\"errMsg\":\"角色设置错误\"}");
                 return;
             }
         } else {

@@ -16,7 +16,10 @@ public class JsonUtil {
         while ((line = reader.readLine()) != null){
             reqStr = reqStr.concat(line);
         }
+        return stringToMap(reqStr);
+    }
 
+    public static HashMap<String, String> stringToMap(String reqStr) throws IOException {
         Gson gson = new Gson();
 //        System.out.println(reqStr);
         HashMap res = null;
