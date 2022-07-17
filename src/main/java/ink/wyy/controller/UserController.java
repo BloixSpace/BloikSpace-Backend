@@ -127,7 +127,6 @@ public class UserController extends HttpServlet {
         HttpSession session = req.getSession();
         String username = request.get("username");
         String password = request.get("password");
-        String role = request.get("role");
         HashMap<String, Object> res = new HashMap<>();
 
         if (session.getAttribute("user") != null) {
@@ -137,14 +136,13 @@ public class UserController extends HttpServlet {
             return;
         }
         if (username == null || username.equals("") ||
-                password == null || password.equals("") ||
-                role == null || role.equals("")) {
+                password == null || password.equals("")) {
             res.put("status", 0);
             res.put("errMsg", "用户名和密码不能为空");
             writer.write(gson.toJson(res));
             return;
         }
-        User user = userService.register(username, password, role);
+        User user = userService.register(username, password);
         if (user.getErrorMsg() != null) {
             res.put("status", 0);
             res.put("errMsg", user.getErrorMsg());
@@ -164,11 +162,11 @@ public class UserController extends HttpServlet {
         HashMap<String, Object> res = new HashMap<>();
 
         res.put("status", 1);
-        res.put("avatarUri", user.getAvatarUri());
+        res.put("avatar_uri", user.getAvatarUri());
         res.put("signature", user.getSignature());
         res.put("username", user.getUsername());
         res.put("id", user.getId());
-        res.put("createDate", user.getCreateDate().toString());
+        res.put("create_date", user.getCreateDate().toString());
         res.put("level", user.getLevel());
         writer.write(gson.toJson(res));
     }
@@ -183,20 +181,41 @@ public class UserController extends HttpServlet {
 
     private void doSetUserInfo(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request)  throws ServletException, IOException {
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
+        User oldUser = (User) session.getAttribute("user");
+        User user = new User();
+        user.setId(oldUser.getId());
         user.setSignature(request.get("signature"));
         user.setAvatarUri(request.get("avatar_uri"));
+        String role = request.get("role");
+        if (role != null) {
+            if (role.equals("buyer")) {
+                user.setLevel(1);
+            } else if (role.equals("seller")) {
+                user.setLevel(2);
+            } else {
+                resp.getWriter().write("\"status\":0,\"errMsg\":\"角色设置错误\"");
+                return;
+            }
+        } else {
+            user.setLevel(null);
+        }
+        HashMap<String, Object> res = new HashMap<>();
         user = userService.UserSetUserInfo(user);
+        if (user.getErrorMsg() != null) {
+            res.put("status", 0);
+            res.put("errMsg", user.getErrorMsg());
+            resp.getWriter().write(gson.toJson(res));
+            return;
+        }
         session.setAttribute("user", user);
 
-        HashMap<String, Object> res = new HashMap<>();
         res.put("status", 1);
         resp.getWriter().write(gson.toJson(res));
     }
 
     private void doUpdatePassword(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request)  throws ServletException, IOException {
-        String oldPwd = request.get("oldPassword");
-        String newPwd = request.get("newPassword");
+        String oldPwd = request.get("old_password");
+        String newPwd = request.get("new_password");
 
         HashMap<String, Object> res = new HashMap<>();
         HttpSession session = req.getSession();

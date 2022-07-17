@@ -18,10 +18,15 @@ public class JsonUtil {
         }
 
         Gson gson = new Gson();
-        System.out.println(reqStr);
-        HashMap<String, String> res = null;
+//        System.out.println(reqStr);
+        HashMap res = null;
         try {
             res = gson.fromJson(reqStr, HashMap.class);
+            for (Object key : res.keySet()) {
+                if (res.get(key) instanceof Number) {
+                    res.put(key, String.valueOf(((Number) res.get(key)).intValue()));
+                }
+            }
         } catch (Exception e) {
             System.out.println(e);
         }

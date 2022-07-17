@@ -16,5 +16,5 @@ public interface ReviewDao {
 
     Review findByOrderId(Integer id);
 
-    HashMap<String, Object> getReviewList(int page, int pageSize, Integer orderId, Integer commodityId, String order);
+    HashMap<String, Object> getReviewList(int page, int pageSize, Integer orderId, Integer commodityId, String order, Boolean desc);
 }

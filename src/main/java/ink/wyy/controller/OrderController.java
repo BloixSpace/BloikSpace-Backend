@@ -112,7 +112,12 @@ public class OrderController extends HttpServlet {
             return;
         }
         Integer id = Integer.valueOf(s_id);
-        String res = orderService.delete(id, user.getId());
+        String res = null;
+        if (user.getLevel() >= 3) {
+            res = orderService.delete(id, -1);
+        } else {
+            res = orderService.delete(id, user.getId());
+        }
         resp.getWriter().write(res);
     }
 
@@ -134,7 +139,9 @@ public class OrderController extends HttpServlet {
         order.setAddress(address);
         order.setNickname(nickname);
         order.setRemark(remark);
-        String res = orderService.update(order, user.getId());
+        Integer userId = user.getId();
+        if (user.getLevel() >= 3) userId = -1;
+        String res = orderService.update(order, userId);
         resp.getWriter().write(res);
     }
 

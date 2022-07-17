@@ -113,13 +113,14 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String updateUserInfo(Integer id, User user) {
         Connection con = C3P0Util.getConnection();
-        String sql = "update tb_user set signature=?, avatar_uri=? where id=?";
+        String sql = "update tb_user set signature=?, avatar_uri=?, level=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getSignature());
             statement.setString(2, user.getAvatarUri());
-            statement.setInt(3, id);
+            statement.setInt(3, user.getLevel());
+            statement.setInt(4, id);
             int num = statement.executeUpdate();
             statement.close();
             if (num == 1) {

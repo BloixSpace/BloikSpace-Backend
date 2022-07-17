@@ -12,7 +12,7 @@
     <!--配置连接池mysql-->
     <named-config name="mysql">
         <property name="driverClass">com.mysql.cj.jdbc.Driver</property>
-        <property name="jdbcUrl">jdbc:mysql://localhost:3306/noixForum?useSSL=false&amp;characterEncoding=utf-8&amp;serverTimezone=UTC</property>
+        <property name="jdbcUrl">jdbc:mysql://43.138.11.219:13306/noixForum?useSSL=false&amp;characterEncoding=utf-8&amp;serverTimezone=UTC</property>
         <property name="user">wyy</property>
         <property name="password">qwqwq123</property>
         <property name="initialPoolSize">10</property>
@@ -22,6 +22,4 @@
         <property name="maxStatements">200</property>
     </named-config>
 
-    <!--配置连接池2-->
-    ......
 </c3p0-config>

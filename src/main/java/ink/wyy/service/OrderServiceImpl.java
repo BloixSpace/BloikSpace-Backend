@@ -87,6 +87,11 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", "已发货，请联系卖家删除订单");
             return gson.toJson(res);
         }
+        // 确认收货后，卖家无法删除订单，管理员可以（防止卖家通过删除订单的方式删除评价）
+        if (userId != 1 && order.getReceiptTime() != null) {
+            res.put("errMsg", "买家已确认收货，无法删除订单");
+            return gson.toJson(res);
+        }
         if (userId != -1 && !userId.equals(commodity.getUserId()) && order.getReceiptTime() != null) {
             res.put("errMsg", "已确认收货，无法删除订单");
             return gson.toJson(res);
