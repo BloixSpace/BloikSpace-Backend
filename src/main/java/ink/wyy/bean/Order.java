@@ -27,11 +27,33 @@ public class Order {
     @SerializedName("is_ship")
     private Boolean isShip;
 
+    public String getCommodityTitle() {
+        return commodityTitle;
+    }
+
+    public void setCommodityTitle(String commodityTitle) {
+        this.commodityTitle = commodityTitle;
+    }
+
+    public String getCommodityPic() {
+        return commodityPic;
+    }
+
+    public void setCommodityPic(String commodityPic) {
+        this.commodityPic = commodityPic;
+    }
+
     @SerializedName("ship_time")
     private String shipTime;
 
     @SerializedName("order_time")
     private String orderTime;
+
+    @SerializedName("commodity_title")
+    private String commodityTitle;
+
+    @SerializedName("commodity_pic")
+    private String commodityPic;
 
     private String errorMsg;
 

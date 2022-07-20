@@ -165,7 +165,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updatePassword(User user, String newPwd, String oldPwd) {
-        if (!oldPwd.equals(user.getPassword())) {
+        user = userDao.findById(user.getId());
+        if (oldPwd == null || !oldPwd.equals(user.getPassword())) {
             user.setErrorMsg("密码错误");
             return user;
         }

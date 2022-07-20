@@ -128,6 +128,7 @@ public class CommodityController extends HttpServlet {
         String s_userId = req.getParameter("user_id");
         String order = req.getParameter("order");
         String category = req.getParameter("category");
+        String key = req.getParameter("key");
         int page = 1;
         int pageSize = 20;
         Integer userId = null;
@@ -146,6 +147,6 @@ public class CommodityController extends HttpServlet {
         if (category == null || category.equals("")) {
             category = null;
         }
-        resp.getWriter().write(commodityService.getList(page, pageSize, order, category, userId));
+        resp.getWriter().write(commodityService.getList(page, pageSize, order, category, key, userId));
     }
 }

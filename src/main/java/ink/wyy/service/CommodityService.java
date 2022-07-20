@@ -14,5 +14,5 @@ public interface CommodityService {
 
     String get(String id);
 
-    String getList(int page, int pageSize, String order, String category, Integer userId);
+    String getList(int page, int pageSize, String order, String category, String key, Integer userId);
 }

@@ -74,24 +74,28 @@ public class OrderDaoImpl implements OrderDao{
     public Order findById(Integer id) {
         Connection con = C3P0Util.getConnection();
         try {
-            String sql = "select * from tb_order where id=?";
+            String sql = "select * from tb_order as a inner join tb_commodity tc on a.commodity_id = tc.id where a.id=?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                Integer userId = rs.getInt("user_id");
-                Integer commodityId = rs.getInt("commodity_id");
-                Boolean isShip = rs.getInt("is_ship") == 1;
-                String receiptTime = rs.getString("receipt_time");
-                String address = rs.getString("address");
-                String phone = rs.getString("phone");
-                String nickname = rs.getString("nickname");
-                String remark = rs.getString("remark");
-                String orderTime = rs.getString("order_time");
-                String shipTime = rs.getString("ship_time");
-                Integer sellerId = rs.getInt("seller_id");
+                Integer userId = rs.getInt("a.user_id");
+                Integer commodityId = rs.getInt("a.commodity_id");
+                Boolean isShip = rs.getInt("a.is_ship") == 1;
+                String receiptTime = rs.getString("a.receipt_time");
+                String address = rs.getString("a.address");
+                String phone = rs.getString("a.phone");
+                String nickname = rs.getString("a.nickname");
+                String remark = rs.getString("a.remark");
+                String orderTime = rs.getString("a.order_time");
+                String shipTime = rs.getString("a.ship_time");
+                Integer sellerId = rs.getInt("a.seller_id");
+                String commodityTitle = rs.getString("tc.title");
+                String commodityPic = rs.getString("tc.pic");
                 Order order = new Order(userId, commodityId, address, phone);
                 order.setOrderTime(orderTime);
+                order.setCommodityTitle(commodityTitle);
+                order.setCommodityPic(commodityPic);
                 order.setShip(isShip);
                 order.setId(id);
                 order.setSellerId(sellerId);
@@ -282,7 +286,7 @@ public class OrderDaoImpl implements OrderDao{
             ResultSet rs = statement.executeQuery();
             HashMap<String, Object> res = new HashMap<>();
             res.put("page", page);
-            res.put("pageNum", pageNum);
+            res.put("page_num", pageNum);
             List<Order> list = new ArrayList<>();
             int num = 0;
             while (rs.next()) {

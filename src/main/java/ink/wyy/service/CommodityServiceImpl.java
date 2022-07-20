@@ -160,8 +160,11 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
-    public String getList(int page, int pageSize, String order, String category, Integer userId) {
-        HashMap<String, Object> map = commodityDao.getList(page, pageSize, order, category, userId);
+    public String getList(int page, int pageSize, String order, String category, String key, Integer userId) {
+        if (key == null) {
+            key = "";
+        }
+        HashMap<String, Object> map = commodityDao.getList(page, pageSize, order, category, key, userId);
         if (map == null) {
             map = new HashMap<>();
             map.put("status", 0);

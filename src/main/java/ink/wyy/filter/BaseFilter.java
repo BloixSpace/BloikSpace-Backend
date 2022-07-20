@@ -41,12 +41,12 @@ public class BaseFilter implements Filter {
         UserDao userDao = (UserDao) context.getAttribute("userDao");
         if (user != null && !user.equals(userDao.findById(user.getId()))) {
             session.removeAttribute("user");
-            resp.getWriter().write("{\"status\":0,\"errMsg\":\"用户信息已修改，请重新登录\"}");
+            resp.getWriter().write("{\"status\":-1,\"errMsg\":\"用户信息已修改，请重新登录\"}");
             return;
         }
         if (!uri.contains("/user/setUserInfo") && !uri.contains("/user/logout")
                 && user != null && user.getLevel() == 0) {
-            resp.getWriter().write("{\"status\":0,\"errMsg\":\"注册完成，请设置用户角色\"}");
+            resp.getWriter().write("{\"status\":-2,\"errMsg\":\"注册完成，请设置用户角色\"}");
             return;
         }
 

@@ -12,5 +12,5 @@ public interface CommodityDao {
 
     String buy(Integer id, Integer num);
 
-    HashMap<String, Object> getList(int page, int pageSize, String order, String category, Integer userId);
+    HashMap<String, Object> getList(int page, int pageSize, String order, String category, String key, Integer userId);
 }

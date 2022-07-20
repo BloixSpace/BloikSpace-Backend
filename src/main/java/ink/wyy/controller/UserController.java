@@ -234,7 +234,7 @@ public class UserController extends HttpServlet {
             resp.getWriter().write(gson.toJson(res));
             return;
         }
-        session.setAttribute("user", user);
+        session.removeAttribute("user");
         res.put("status", 1);
         resp.getWriter().write(gson.toJson(res));
     }

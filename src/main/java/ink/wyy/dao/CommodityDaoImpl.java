@@ -194,13 +194,13 @@ public class CommodityDaoImpl implements CommodityDao {
     }
 
     @Override
-    public HashMap<String, Object> getList(int page, int pageSize, String order, String category, Integer userId) {
+    public HashMap<String, Object> getList(int page, int pageSize, String order, String category, String key, Integer userId) {
         Connection con = C3P0Util.getConnection();
         try {
             con.setAutoCommit(false);
-            String sql = "select id, title, pic, price, category, stock, release_time, update_time, user_id from tb_commodity where ";
-            String totSql = "select count(*) as cnt from tb_commodity where ";
-            int bias = 0;
+            String sql = "select * from tb_commodity where title like ? and ";
+            String totSql = "select count(*) as cnt from tb_commodity where title like '%" + key + "%' and ";
+            int bias = 1;
             if (category != null) {
                 sql += "category=?";
                 totSql += "category=\"" + category + "\"";
@@ -215,7 +215,7 @@ public class CommodityDaoImpl implements CommodityDao {
                 totSql += "user_id=" + userId;
                 bias++;
             }
-            if (bias == 0) {
+            if (bias == 1) {
                 totSql += " 1=1";
                 sql += " 1=1 ";
             }
@@ -225,12 +225,13 @@ public class CommodityDaoImpl implements CommodityDao {
             ResultSet totSet = statement1.executeQuery(totSql);
             totSet.next();
             int allNum = totSet.getInt(1);
+            statement.setString(1, "%" + key + "%");
             if (category != null) {
-                statement.setString(1, category);
+                statement.setString(2, category);
             }
             if (userId != null) {
-                if (category != null) statement.setInt(2, userId);
-                else statement.setInt(1, userId);
+                if (category != null) statement.setInt(3, userId);
+                else statement.setInt(2, userId);
             }
             statement.setInt(bias + 1, (page - 1) * pageSize);
             statement.setInt(bias + 2, pageSize);
@@ -240,7 +241,7 @@ public class CommodityDaoImpl implements CommodityDao {
             map.put("page", page);
             int pageNum = allNum / pageSize;
             if (allNum % pageSize != 0) pageNum++;
-            map.put("pageNum", pageNum);
+            map.put("page_num", pageNum);
             List<HashMap<String, Object>> list = new ArrayList<>();
             while (rs.next()) {
                 num++;

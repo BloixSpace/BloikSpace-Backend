@@ -240,7 +240,7 @@ public class UserDaoImpl implements UserDao{
             HashMap<String, Object> res = new HashMap<>();
             int num = 0;
             res.put("page", page);
-            res.put("pageNum", pageNum);
+            res.put("page_num", pageNum);
             List<HashMap<String, Object>> list = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
