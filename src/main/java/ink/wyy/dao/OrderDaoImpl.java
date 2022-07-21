@@ -246,7 +246,7 @@ public class OrderDaoImpl implements OrderDao{
                     totSql += "is_ship=? ";
                 }
             }
-            sql += " order by " + order + " limit ?, ?";
+            sql += " order by " + order + " desc limit ?, ?";
             PreparedStatement statement = con.prepareStatement(sql);
             PreparedStatement statement1 = con.prepareStatement(totSql);
             int x = 1;

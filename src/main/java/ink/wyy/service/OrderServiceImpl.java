@@ -113,11 +113,6 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", "已确认收货，无法删除订单");
             return gson.toJson(res);
         }
-        String msg = orderDao.delete(id);
-        if (msg != null) {
-            res.put("errMsg", msg);
-            return gson.toJson(res);
-        }
         commodityDao.buy(order.getCommodityId(), -order.getBuyNum());
         Notice noticeUpdate = new Notice(order.getSellerId(), "order delete", "您有一条订单取消，请注意查看。");
         noticeUpdate.setOrderId(order.getId());
@@ -127,6 +122,11 @@ public class OrderServiceImpl implements OrderService {
         if (!userId.equals(order.getUserId())) {
             noticeUpdate.setUserId(order.getUserId());
             noticeService.add(noticeUpdate);
+        }
+        String msg = orderDao.delete(id);
+        if (msg != null) {
+            res.put("errMsg", msg);
+            return gson.toJson(res);
         }
         res.put("status", 1);
         return gson.toJson(res);

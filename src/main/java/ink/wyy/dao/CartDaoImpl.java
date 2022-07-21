@@ -69,7 +69,7 @@ public class CartDaoImpl implements CartDao {
                     "tb_cart as b join tb_commodity a on a.id = b.commodity_id " +
                     "where b.user_id=?";
             if (order != null) {
-                sql += " order by " + order;
+                sql += " order by " + order + " desc ";
             }
             if (page != null) {
                 sql += " limit ?, ?";
