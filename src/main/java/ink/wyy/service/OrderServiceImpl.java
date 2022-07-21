@@ -45,6 +45,10 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", "phone不能为空");
             return gson.toJson(res);
         }
+        if (order.getBuyNum() == null || order.getBuyNum() == 0) {
+            res.put("errMsg", "购买数量不能为空");
+            return gson.toJson(res);
+        }
         if (order.getNickname() == null || order.getNickname().equals("")) {
             order.setNickname(order.getPhone());
         }
@@ -54,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
             return gson.toJson(res);
         }
 
-        String msg = commodityDao.buy(order.getCommodityId(), 1);
+        String msg = commodityDao.buy(order.getCommodityId(), order.getBuyNum());
         order.setSellerId(commodity.getUserId());
         if (msg != null) {
             res.put("errMsg", msg);
@@ -63,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
         Order order1 = orderDao.add(order);
         if (order1.getErrorMsg() != null) {
             res.put("errMsg", order1.getErrorMsg());
-            commodityDao.buy(order.getCommodityId(), -1);
+            commodityDao.buy(order.getCommodityId(), -order.getBuyNum());
             return gson.toJson(res);
         }
         Notice noticeAdd = new Notice(commodity.getUserId(), "order add", "您有一条新的订单，请及时处理。");
@@ -114,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", msg);
             return gson.toJson(res);
         }
-        commodityDao.buy(order.getCommodityId(), -1);
+        commodityDao.buy(order.getCommodityId(), -order.getBuyNum());
         Notice noticeUpdate = new Notice(order.getSellerId(), "order delete", "您有一条订单取消，请注意查看。");
         noticeUpdate.setOrderId(order.getId());
         noticeUpdate.setCommodityId(order.getCommodityId());

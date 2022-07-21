@@ -25,9 +25,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String add(Integer commodityId, Integer userId) {
-        String msg = cartDao.add(commodityId, userId);
+    public String add(Integer commodityId, Integer userId, Integer buyNum) {
         HashMap<String, Object> res = new HashMap<>();
+        if (buyNum == null || buyNum == 0) {
+            res.put("status", 0);
+            res.put("errMsg", "buy_num不能为0");
+            return gson.toJson(res);
+        }
+        String msg = cartDao.add(commodityId, userId, buyNum);
         if (msg != null) {
             res.put("status", 0);
             res.put("errMsg", msg);
@@ -109,6 +114,7 @@ public class CartServiceImpl implements CartService {
             if (stock == 0) continue;
             order.setCommodityId((Integer) map.get("commodity_id"));
             order.setSellerId((Integer) map.get("seller_id"));
+            order.setBuyNum((Integer) map.get("buy_num"));
             String add = orderService.add(order);
             try {
                 HashMap<String, String> map1 = JsonUtil.stringToMap(add);

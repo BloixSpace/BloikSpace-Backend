@@ -86,6 +86,7 @@ public class OrderController extends HttpServlet {
         String phone = request.get("phone");
         String nickname = request.get("nickname");
         String remark = request.get("remark");
+        String s_buyNum = request.get("buy_num");
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (s_commodityId == null || s_commodityId.equals("")) {
@@ -94,11 +95,15 @@ public class OrderController extends HttpServlet {
         }
         Integer commodityId = Integer.valueOf(s_commodityId);
         Order order = new Order(user.getId(), commodityId, address, phone);
+        Integer buyNum = null;
         if (nickname != null && !nickname.equals("")) {
             order.setNickname(nickname);
         }
         if (remark != null && !remark.equals("")) {
             order.setRemark(remark);
+        }
+        if (s_buyNum != null && !s_buyNum.equals("")) {
+            order.setBuyNum(Integer.parseInt(s_buyNum));
         }
         String res = orderService.add(order);
         resp.getWriter().write(res);

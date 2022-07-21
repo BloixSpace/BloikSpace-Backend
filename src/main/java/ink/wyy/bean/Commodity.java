@@ -13,6 +13,16 @@ public class Commodity {
     private Double price;
     private Integer stock;
 
+    private Integer sales;
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
+    }
+
     public Integer getStock() {
         return stock;
     }

@@ -15,13 +15,14 @@ import java.util.Map;
 public class CartDaoImpl implements CartDao {
 
     @Override
-    public String add(Integer commodityId, Integer userId) {
+    public String add(Integer commodityId, Integer userId, Integer buyNum) {
         Connection con = C3P0Util.getConnection();
         try {
-            String sql = "insert into tb_cart (commodity_id, user_id, time) values (?, ?, now());";
+            String sql = "insert into tb_cart (commodity_id, user_id, buy_num, time) values (?, ?, ?, now());";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, commodityId);
             statement.setInt(2, userId);
+            statement.setInt(3, buyNum);
             int num = statement.executeUpdate();
             if (num == 1) {
                 return null;
@@ -61,7 +62,7 @@ public class CartDaoImpl implements CartDao {
     public HashMap<String, Object> getList(Integer page, Integer pageSize, String order, Integer userId) {
         Connection con = C3P0Util.getConnection();
         try {
-            String sql = "select b.id, a.id, a.title, a.pic, a.price, a.stock, a.user_id from " +
+            String sql = "select b.id, a.id, a.title, a.pic, a.price, a.stock, a.user_id, b.buy_num from " +
                     "tb_cart as b join tb_commodity a on a.id = b.commodity_id " +
                     "where b.user_id=?";
             String totSql = "select count(*) from " +
@@ -106,6 +107,7 @@ public class CartDaoImpl implements CartDao {
                 Double price = rs.getDouble(5);
                 int stock = rs.getInt(6);
                 Integer sellerId = rs.getInt(7);
+                Integer buyNum = rs.getInt(8);
                 Map<String, Object> map = new HashMap<>();
                 map.put("id", id);
                 map.put("commodity_id", commodityId);
@@ -114,6 +116,7 @@ public class CartDaoImpl implements CartDao {
                 map.put("price", price);
                 map.put("stock", stock);
                 map.put("seller_id", sellerId);
+                map.put("buy_num", buyNum);
                 list.add(map);
             }
             res.put("commodities", list);
@@ -161,6 +164,7 @@ public class CartDaoImpl implements CartDao {
                 cart.setId(rs.getInt("id"));
                 cart.setCommodityId(rs.getInt("commodity_id"));
                 cart.setUserId(rs.getInt("user_id"));
+                cart.setBuyNum(rs.getInt("buy_num"));
                 return cart;
             } else {
                 return null;

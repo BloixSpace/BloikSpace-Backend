@@ -129,9 +129,11 @@ public class CommodityController extends HttpServlet {
         String order = req.getParameter("order");
         String category = req.getParameter("category");
         String key = req.getParameter("key");
+        String s_desc = req.getParameter("desc");
         int page = 1;
         int pageSize = 20;
         Integer userId = null;
+        Boolean desc = null;
         if (s_page != null && !s_page.equals("")) {
             page = Integer.parseInt(s_page);
         }
@@ -147,6 +149,9 @@ public class CommodityController extends HttpServlet {
         if (category == null || category.equals("")) {
             category = null;
         }
-        resp.getWriter().write(commodityService.getList(page, pageSize, order, category, key, userId));
+        if (s_desc != null && !s_desc.equals("")) {
+            desc = s_desc.equals("true");
+        }
+        resp.getWriter().write(commodityService.getList(page, pageSize, order, category, key, userId, desc));
     }
 }

@@ -1,6 +1,7 @@
 package ink.wyy.service;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import ink.wyy.bean.Commodity;
 import ink.wyy.dao.CommodityDao;
 
@@ -154,17 +155,21 @@ public class CommodityServiceImpl implements CommodityService {
         res.put("pic", commodity.getPicUri());
         res.put("price", commodity.getPrice());
         res.put("stock", commodity.getStock());
+        res.put("sales", commodity.getSales());
         res.put("release_time", commodity.getCreateDate());
         res.put("update_time", commodity.getUpdateDate());
         return gson.toJson(res);
     }
 
     @Override
-    public String getList(int page, int pageSize, String order, String category, String key, Integer userId) {
+    public String getList(int page, int pageSize, String order, String category, String key, Integer userId, Boolean desc) {
         if (key == null) {
             key = "";
         }
-        HashMap<String, Object> map = commodityDao.getList(page, pageSize, order, category, key, userId);
+        if (desc == null) {
+            desc = false;
+        }
+        HashMap<String, Object> map = commodityDao.getList(page, pageSize, order, category, key, userId, desc);
         if (map == null) {
             map = new HashMap<>();
             map.put("status", 0);

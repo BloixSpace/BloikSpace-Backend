@@ -4,7 +4,7 @@ import ink.wyy.bean.Order;
 
 public interface CartService {
 
-    String add(Integer commodityId, Integer userId);
+    String add(Integer commodityId, Integer userId, Integer buyNum);
 
     String delete(Integer id, Integer userId);
 

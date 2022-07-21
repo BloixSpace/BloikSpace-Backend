@@ -8,6 +8,16 @@ public class Cart {
 
     Integer commodityId;
 
+    Integer buyNum;
+
+    public Integer getBuyNum() {
+        return buyNum;
+    }
+
+    public void setBuyNum(Integer buyNum) {
+        this.buyNum = buyNum;
+    }
+
     public Integer getId() {
         return id;
     }

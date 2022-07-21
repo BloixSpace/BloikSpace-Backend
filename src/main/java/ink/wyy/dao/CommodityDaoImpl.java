@@ -94,12 +94,14 @@ public class CommodityDaoImpl implements CommodityDao {
             return "库存不足";
         }
         commodity.setStock(commodity.getStock() - buyNum);
-        String sql = "update tb_commodity set stock=? where id=?";
+        commodity.setSales(commodity.getSales() + buyNum);
+        String sql = "update tb_commodity set stock=?, sales=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, commodity.getStock());
-            statement.setInt(2, commodity.getId());
+            statement.setInt(2, commodity.getSales());
+            statement.setInt(3, commodity.getId());
             Integer num = statement.executeUpdate();
             if (num == 1) {
                 con.commit();
@@ -170,8 +172,10 @@ public class CommodityDaoImpl implements CommodityDao {
             Integer stock = rs.getInt("stock");
             Double price = rs.getDouble("price");
             Integer userId = rs.getInt("user_id");
+            Integer sales = rs.getInt("sales");
             Commodity commodity = new Commodity(title, content, category);
             commodity.setId(id);
+            commodity.setSales(sales);
             commodity.setPicUri(picUri);
             commodity.setStock(stock);
             commodity.setUserId(userId);
@@ -194,7 +198,7 @@ public class CommodityDaoImpl implements CommodityDao {
     }
 
     @Override
-    public HashMap<String, Object> getList(int page, int pageSize, String order, String category, String key, Integer userId) {
+    public HashMap<String, Object> getList(int page, int pageSize, String order, String category, String key, Integer userId, Boolean desc) {
         Connection con = C3P0Util.getConnection();
         try {
             con.setAutoCommit(false);
@@ -219,7 +223,9 @@ public class CommodityDaoImpl implements CommodityDao {
                 totSql += " 1=1";
                 sql += " 1=1 ";
             }
-            sql += " order by " + order + " limit ?, ?";
+            sql += " order by " + order;
+            if (desc) sql += " desc ";
+            sql += " limit ?, ? ";
             PreparedStatement statement = con.prepareStatement(sql);
             Statement statement1 = con.createStatement();
             ResultSet totSet = statement1.executeQuery(totSql);
@@ -253,6 +259,7 @@ public class CommodityDaoImpl implements CommodityDao {
                 String picUri = rs.getString("pic");
                 Double price = rs.getDouble("price");
                 Integer stock = rs.getInt("stock");
+                Integer sales = rs.getInt("sales");
                 int userId1 = rs.getInt("user_id");
                 HashMap<String, Object> thisMap = new HashMap<>();
                 thisMap.put("id", id);
@@ -261,6 +268,7 @@ public class CommodityDaoImpl implements CommodityDao {
                 thisMap.put("update_time", updateTime);
                 thisMap.put("title", title);
                 thisMap.put("pic", picUri);
+                thisMap.put("sales", sales);
                 thisMap.put("price", price);
                 thisMap.put("user_id", userId1);
                 thisMap.put("stock", stock);

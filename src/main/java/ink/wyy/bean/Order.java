@@ -27,6 +27,17 @@ public class Order {
     @SerializedName("is_ship")
     private Boolean isShip;
 
+    @SerializedName("buy_num")
+    private Integer buyNum;
+
+    public Integer getBuyNum() {
+        return buyNum;
+    }
+
+    public void setBuyNum(Integer buyNum) {
+        this.buyNum = buyNum;
+    }
+
     public String getCommodityTitle() {
         return commodityTitle;
     }

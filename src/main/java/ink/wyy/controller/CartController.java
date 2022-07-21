@@ -72,13 +72,19 @@ public class CartController extends HttpServlet {
 
     private void doAdd(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
         String s_commodityId = request.get("commodity_id");
+        String s_buyNum = request.get("buy_num");
         if (s_commodityId == null || s_commodityId.equals("")) {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"commodity_id不能为空\"}");
             return;
         }
+        if (s_buyNum == null || s_buyNum.equals("")) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"buy_num不能为空\"}");
+            return;
+        }
+        Integer buyNum = Integer.valueOf(s_buyNum);
         Integer commodityId = Integer.valueOf(s_commodityId);
         User user = (User) req.getSession().getAttribute("user");
-        String res = cartService.add(commodityId, user.getId());
+        String res = cartService.add(commodityId, user.getId(), buyNum);
         resp.getWriter().write(res);
     }
 

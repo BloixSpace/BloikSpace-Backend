@@ -14,8 +14,8 @@ public class OrderDaoImpl implements OrderDao{
     public Order add(Order order) {
         Connection con = C3P0Util.getConnection();
         try {
-            String sql = "insert into tb_order (user_id, commodity_id, address, phone, remark, nickname, seller_id, order_time) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, now())";
+            String sql = "insert into tb_order (user_id, commodity_id, address, phone, remark, nickname, seller_id, buy_num, order_time) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, now())";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, order.getUserId());
             statement.setInt(2, order.getCommodityId());
@@ -24,6 +24,7 @@ public class OrderDaoImpl implements OrderDao{
             statement.setString(5, order.getRemark());
             statement.setString(6, order.getNickname());
             statement.setInt(7, order.getSellerId());
+            statement.setInt(8, order.getBuyNum());
             int num = statement.executeUpdate();
             if (num == 1) {
                 Statement statement1 = con.createStatement();
@@ -92,6 +93,7 @@ public class OrderDaoImpl implements OrderDao{
                 Integer sellerId = rs.getInt("a.seller_id");
                 String commodityTitle = rs.getString("tc.title");
                 String commodityPic = rs.getString("tc.pic");
+                Integer buyNum = rs.getInt("a.buy_num");
                 Order order = new Order(userId, commodityId, address, phone);
                 order.setOrderTime(orderTime);
                 order.setCommodityTitle(commodityTitle);
@@ -102,6 +104,7 @@ public class OrderDaoImpl implements OrderDao{
                 order.setNickname(nickname);
                 order.setRemark(remark);
                 order.setReceiptTime(receiptTime);
+                order.setBuyNum(buyNum);
                 if (shipTime != null && !shipTime.equals("")) {
                     order.setShipTime(shipTime);
                 }
@@ -303,6 +306,7 @@ public class OrderDaoImpl implements OrderDao{
                 String orderTime = rs.getString("order_time");
                 String shipTime = rs.getString("ship_time");
                 String receiptTime = rs.getString("receipt_time");
+                Integer buyNum = rs.getInt("buy_num");
                 Order order1 = new Order(userId1, commodityId1, address, phone);
                 order1.setOrderTime(orderTime);
                 order1.setId(id);
@@ -311,6 +315,7 @@ public class OrderDaoImpl implements OrderDao{
                 order1.setNickname(nickname);
                 order1.setRemark(remark);
                 order1.setReceiptTime(receiptTime);
+                order1.setBuyNum(buyNum);
                 if (shipTime != null && !shipTime.equals("")) {
                     order1.setShipTime(shipTime);
                 }
