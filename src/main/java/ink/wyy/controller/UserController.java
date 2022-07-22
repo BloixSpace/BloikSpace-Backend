@@ -7,6 +7,7 @@ import ink.wyy.dao.UserDaoImpl;
 import ink.wyy.service.UserService;
 import ink.wyy.service.UserServiceImpl;
 import ink.wyy.util.JsonUtil;
+import ink.wyy.util.MD5Util;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,6 +26,8 @@ public class UserController extends HttpServlet {
 
     UserService userService;
     Gson gson;
+
+    private static final String salt = "b1oikSpace";
 
     @Override
     public void init() throws ServletException {
@@ -94,6 +97,7 @@ public class UserController extends HttpServlet {
         }
         String username = request.get("username");
         String password = request.get("password");
+        password = MD5Util.getMD5Str(password, salt);
 
         if (session.getAttribute("user") != null) {
             res.put("status", 0);
@@ -127,6 +131,7 @@ public class UserController extends HttpServlet {
         HttpSession session = req.getSession();
         String username = request.get("username");
         String password = request.get("password");
+        password = MD5Util.getMD5Str(password, salt);
         HashMap<String, Object> res = new HashMap<>();
 
         if (session.getAttribute("user") != null) {
@@ -216,6 +221,8 @@ public class UserController extends HttpServlet {
     private void doUpdatePassword(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request)  throws ServletException, IOException {
         String oldPwd = request.get("old_password");
         String newPwd = request.get("new_password");
+        oldPwd = MD5Util.getMD5Str(oldPwd, salt);
+        newPwd = MD5Util.getMD5Str(newPwd, salt);
 
         HashMap<String, Object> res = new HashMap<>();
         HttpSession session = req.getSession();

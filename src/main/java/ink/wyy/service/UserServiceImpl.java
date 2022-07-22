@@ -3,6 +3,7 @@ package ink.wyy.service;
 import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.UserDao;
+import ink.wyy.util.MD5Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,6 +98,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = req.get("username");
         String password = req.get("password");
+        password = MD5Util.getMD5Str(password, "b1oikSpace");
         String avatarUri = req.get("avatarUri");
         String signature = req.get("signature");
         Integer level = null;
