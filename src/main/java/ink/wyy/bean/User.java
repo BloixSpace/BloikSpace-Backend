@@ -14,6 +14,16 @@ public class User {
     private Integer level;  // 1普通，2管理员，3超管
     private String errorMsg;
 
+    private String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public User() {
     }
 

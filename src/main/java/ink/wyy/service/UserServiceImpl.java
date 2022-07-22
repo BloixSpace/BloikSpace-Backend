@@ -55,10 +55,14 @@ public class UserServiceImpl implements UserService {
         String signature = user.getSignature();
         Integer id = user.getId();
         String avatarUri = user.getAvatarUri();
+        String phone = user.getPhone();
         Integer level = user.getLevel();
         user = userDao.findById(id);
         if (signature != null && !signature.equals("")) {
             user.setSignature(signature);
+        }
+        if (phone != null && !phone.equals("")) {
+            user.setPhone(phone);
         }
         if (avatarUri != null && !avatarUri.equals("")) {
             user.setAvatarUri(avatarUri);
@@ -100,6 +104,7 @@ public class UserServiceImpl implements UserService {
         String password = req.get("password");
         String avatarUri = req.get("avatarUri");
         String signature = req.get("signature");
+        String phone = req.get("phone");
         Integer level = null;
         if (req.get("level") != null && !req.get("level").equals("")) {
             level = Integer.valueOf(req.get("level"));
@@ -110,6 +115,9 @@ public class UserServiceImpl implements UserService {
         if (password != null && !password.equals("")) {
             password = MD5Util.getMD5Str(password, "b1oikSpace");
             newUser.setPassword(password);
+        }
+        if (phone != null && !phone.equals("")) {
+            newUser.setPhone(phone);
         }
         if (avatarUri != null && !avatarUri.equals("")) {
             newUser.setAvatarUri(avatarUri);

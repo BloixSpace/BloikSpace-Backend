@@ -78,7 +78,7 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String update(Integer id, User user) {
         Connection con = C3P0Util.getConnection();
-        String sql = "update tb_user set username=?, password=?, signature=?, avatar_uri=?, level=? where id=?";
+        String sql = "update tb_user set username=?, password=?, signature=?, avatar_uri=?, level=?, phone=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
@@ -87,7 +87,8 @@ public class UserDaoImpl implements UserDao{
             statement.setString(3, user.getSignature());
             statement.setString(4, user.getAvatarUri());
             statement.setInt(5, user.getLevel());
-            statement.setInt(6, user.getId());
+            statement.setString(6, user.getPhone());
+            statement.setInt(7, user.getId());
             int num = statement.executeUpdate();
             statement.close();
             if (num == 1) {
@@ -113,14 +114,15 @@ public class UserDaoImpl implements UserDao{
     @Override
     public String updateUserInfo(Integer id, User user) {
         Connection con = C3P0Util.getConnection();
-        String sql = "update tb_user set signature=?, avatar_uri=?, level=? where id=?";
+        String sql = "update tb_user set signature=?, avatar_uri=?, level=?, phone=? where id=?";
         try {
             con.setAutoCommit(false);
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, user.getSignature());
             statement.setString(2, user.getAvatarUri());
             statement.setInt(3, user.getLevel());
-            statement.setInt(4, id);
+            statement.setString(4, user.getPhone());
+            statement.setInt(5, id);
             int num = statement.executeUpdate();
             statement.close();
             if (num == 1) {

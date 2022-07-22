@@ -172,6 +172,7 @@ public class UserController extends HttpServlet {
         res.put("username", user.getUsername());
         res.put("id", user.getId());
         res.put("create_date", user.getCreateDate().toString());
+        res.put("phone", user.getPhone());
         res.put("level", user.getLevel());
         writer.write(gson.toJson(res));
     }
@@ -191,6 +192,7 @@ public class UserController extends HttpServlet {
         user.setId(oldUser.getId());
         user.setSignature(request.get("signature"));
         user.setAvatarUri(request.get("avatar_uri"));
+        user.setPhone(request.get("phone"));
         String role = request.get("role");
         if (role != null) {
             if (role.equals("buyer")) {
