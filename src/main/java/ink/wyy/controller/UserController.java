@@ -97,7 +97,6 @@ public class UserController extends HttpServlet {
         }
         String username = request.get("username");
         String password = request.get("password");
-        password = MD5Util.getMD5Str(password, salt);
 
         if (session.getAttribute("user") != null) {
             res.put("status", 0);
@@ -113,6 +112,7 @@ public class UserController extends HttpServlet {
             writer.write(gson.toJson(res));
             return;
         }
+        password = MD5Util.getMD5Str(password, salt);
         User user = userService.login(username, password);
         if (user.getErrorMsg() != null) {
             res.put("status", 0);
@@ -131,7 +131,6 @@ public class UserController extends HttpServlet {
         HttpSession session = req.getSession();
         String username = request.get("username");
         String password = request.get("password");
-        password = MD5Util.getMD5Str(password, salt);
         HashMap<String, Object> res = new HashMap<>();
 
         if (session.getAttribute("user") != null) {
@@ -147,6 +146,7 @@ public class UserController extends HttpServlet {
             writer.write(gson.toJson(res));
             return;
         }
+        password = MD5Util.getMD5Str(password, salt);
         User user = userService.register(username, password);
         if (user.getErrorMsg() != null) {
             res.put("status", 0);

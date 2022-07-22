@@ -98,7 +98,6 @@ public class UserServiceImpl implements UserService {
         }
         String username = req.get("username");
         String password = req.get("password");
-        password = MD5Util.getMD5Str(password, "b1oikSpace");
         String avatarUri = req.get("avatarUri");
         String signature = req.get("signature");
         Integer level = null;
@@ -109,6 +108,7 @@ public class UserServiceImpl implements UserService {
             newUser.setUsername(username);
         }
         if (password != null && !password.equals("")) {
+            password = MD5Util.getMD5Str(password, "b1oikSpace");
             newUser.setPassword(password);
         }
         if (avatarUri != null && !avatarUri.equals("")) {
