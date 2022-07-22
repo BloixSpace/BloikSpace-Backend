@@ -117,11 +117,6 @@ public class CartServiceImpl implements CartService {
             res.put("errMsg", "手机不能为空");
             return gson.toJson(res);
         }
-        if (order.getBuyNum() <= 0) {
-            res.put("status", 0);
-            res.put("errMsg", "购买数量不合法");
-            return gson.toJson(res);
-        }
 
         List<Integer> listOfOrder = new ArrayList<>();
         for (Map<String, Object> map : list) {
