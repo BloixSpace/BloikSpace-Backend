@@ -1,8 +1,9 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.UserDao;
+import ink.wyy.service.UserService;
 import ink.wyy.util.MD5Util;
 
 import java.util.HashMap;

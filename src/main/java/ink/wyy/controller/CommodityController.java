@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import ink.wyy.bean.Commodity;
 import ink.wyy.bean.User;
 import ink.wyy.dao.CommodityDao;
-import ink.wyy.dao.CommodityDaoImpl;
+import ink.wyy.dao.impl.CommodityDaoImpl;
 import ink.wyy.service.CommodityService;
-import ink.wyy.service.CommodityServiceImpl;
+import ink.wyy.service.impl.CommodityServiceImpl;
 import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletContext;

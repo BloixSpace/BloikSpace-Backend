@@ -3,9 +3,9 @@ package ink.wyy.controller;
 import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.FollowDao;
-import ink.wyy.dao.FollowDaoImpl;
+import ink.wyy.dao.impl.FollowDaoImpl;
 import ink.wyy.service.FollowService;
-import ink.wyy.service.FollowServiceImpl;
+import ink.wyy.service.impl.FollowServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

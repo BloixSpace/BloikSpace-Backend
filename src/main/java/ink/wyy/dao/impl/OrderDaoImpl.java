@@ -1,7 +1,8 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import ink.wyy.bean.Commodity;
 import ink.wyy.bean.Order;
+import ink.wyy.dao.OrderDao;
 import ink.wyy.util.C3P0Util;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class OrderDaoImpl implements OrderDao{
+public class OrderDaoImpl implements OrderDao {
 
     public Order add(Order order) {
         Connection con = C3P0Util.getConnection();

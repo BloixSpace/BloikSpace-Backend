@@ -1,12 +1,14 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import ink.wyy.bean.Cart;
+import ink.wyy.bean.Commodity;
 import ink.wyy.bean.Order;
-import ink.wyy.dao.CartDao;
-import ink.wyy.dao.CartDaoImpl;
-import ink.wyy.dao.OrderDao;
-import ink.wyy.dao.OrderDaoImpl;
+import ink.wyy.dao.*;
+import ink.wyy.dao.impl.CommodityDaoImpl;
+import ink.wyy.dao.impl.OrderDaoImpl;
+import ink.wyy.service.CartService;
+import ink.wyy.service.OrderService;
 import ink.wyy.util.JsonUtil;
 
 import java.io.IOException;
@@ -16,12 +18,14 @@ public class CartServiceImpl implements CartService {
 
     private CartDao cartDao;
     private OrderService orderService;
+    private CommodityDao commodityDao;
     private Gson gson;
 
     public CartServiceImpl(CartDao cartDao) {
         this.cartDao = cartDao;
         orderService = new OrderServiceImpl(new OrderDaoImpl());
         this.gson = new Gson();
+        commodityDao = new CommodityDaoImpl();
     }
 
     @Override
@@ -32,10 +36,49 @@ public class CartServiceImpl implements CartService {
             res.put("errMsg", "buy_num不合法");
             return gson.toJson(res);
         }
-        String msg = cartDao.add(commodityId, userId, buyNum);
+        Cart cart = cartDao.findByCommodityId(commodityId, userId);
+        String msg = null;
+        if (cart != null) {
+            Integer newBuyNum = cart.getBuyNum() + buyNum;
+            Commodity commodity = commodityDao.findById(cart.getCommodityId());
+            if (newBuyNum > commodity.getStock()) {
+                newBuyNum = commodity.getStock();
+            }
+            msg = cartDao.update(cart.getId(), newBuyNum);
+        } else {
+            Commodity commodity = commodityDao.findById(commodityId);
+            if (buyNum > commodity.getStock()) {
+                buyNum = commodity.getStock();
+            }
+            msg = cartDao.add(commodityId, userId, buyNum);
+        }
         if (msg != null) {
             res.put("status", 0);
             res.put("errMsg", msg);
+            return gson.toJson(res);
+        }
+        res.put("status", 1);
+        return gson.toJson(res);
+    }
+
+    @Override
+    public String batchDelete(List list, Integer userId) throws IOException {
+        StringBuilder errMsg = new StringBuilder();
+        HashMap<String, Object> res = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            Integer id = ((Double) list.get(i)).intValue();
+            String msg = delete(id, userId);
+            HashMap<String, String> map = JsonUtil.stringToMap(msg);
+            if (map.get("status").equals("0")) {
+                if (!errMsg.toString().equals("")) {
+                    errMsg.append("\n");
+                }
+                errMsg.append(id).append(": ").append(map.get("errMsg"));
+            }
+        }
+        if (!errMsg.toString().equals("")) {
+            res.put("status", 0);
+            res.put("errMsg", errMsg);
             return gson.toJson(res);
         }
         res.put("status", 1);
@@ -80,6 +123,30 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public String update(Integer id, Integer userId, Integer buyNum) {
+        Cart cart = cartDao.findById(id);
+        HashMap<String, Object> res = new HashMap<>();
+        if (cart == null) {
+            res.put("status", 0);
+            res.put("errMsg", "商品不存在");
+            return gson.toJson(res);
+        }
+        if (!Objects.equals(cart.getUserId(), userId)) {
+            res.put("status", 0);
+            res.put("errMsg", "无操作权限");
+            return gson.toJson(res);
+        }
+        String msg = cartDao.update(id, buyNum);
+        if (msg != null) {
+            res.put("status", 0);
+            res.put("errMsg", msg);
+            return gson.toJson(res);
+        }
+        res.put("status", 1);
+        return gson.toJson(res);
+    }
+
+    @Override
     public String getList(int page, int pageSize, String order, Integer userId) {
         if (order == null || order.equals("")) {
             order = "time";
@@ -99,12 +166,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public String settle(Integer userId, Order order) {
+    public String settle(Integer userId, Order order, List list) {
         HashMap<String, Object> res = new HashMap<>();
-        List<Map<String, Object>> list = (List<Map<String, Object>>) cartDao.getList(null, null, null, userId).get("commodities");
         if (list.size() == 0) {
             res.put("status", 0);
-            res.put("errMsg", "购物车为空");
+            res.put("errMsg", "结算商品不能为空");
             return gson.toJson(res);
         }
         if (order.getAddress() == null || order.getAddress().equals("")) {
@@ -119,12 +185,18 @@ public class CartServiceImpl implements CartService {
         }
 
         List<Integer> listOfOrder = new ArrayList<>();
-        for (Map<String, Object> map : list) {
-            int stock = (int) map.get("stock");
+        for (int i = 0; i < list.size(); i++) {
+            // 通过传入list找到对应购物车条目和商品
+            Cart cart = cartDao.findById(((Double) list.get(i)).intValue());
+            Commodity commodity = commodityDao.findById(cart.getCommodityId());
+            // 购买完成后，删除对应购物车条目
+            cartDao.delete(cart.getId());
+            int stock = commodity.getStock();
             if (stock == 0) continue;
-            order.setCommodityId((Integer) map.get("commodity_id"));
-            order.setSellerId((Integer) map.get("seller_id"));
-            order.setBuyNum((Integer) map.get("buy_num"));
+            order.setCommodityId(cart.getCommodityId());
+            order.setSellerId(commodity.getUserId());
+            // 设置购买数量为购物车要求购买数量和库存的最小值
+            order.setBuyNum(Math.min(cart.getBuyNum(), commodity.getStock()));
             String add = orderService.add(order);
             try {
                 HashMap<String, String> map1 = JsonUtil.stringToMap(add);
@@ -135,7 +207,6 @@ public class CartServiceImpl implements CartService {
                 System.out.println(e);
             }
         }
-        cartDao.empty(userId);
         res.put("status", 1);
         res.put("orders", listOfOrder);
         return gson.toJson(res);

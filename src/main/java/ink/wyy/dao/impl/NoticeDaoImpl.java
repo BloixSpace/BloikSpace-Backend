@@ -1,6 +1,7 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import ink.wyy.bean.Notice;
+import ink.wyy.dao.NoticeDao;
 import ink.wyy.util.C3P0Util;
 
 import java.sql.*;

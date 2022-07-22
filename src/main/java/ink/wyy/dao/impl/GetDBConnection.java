@@ -1,4 +1,4 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

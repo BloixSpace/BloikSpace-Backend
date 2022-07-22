@@ -1,6 +1,7 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import ink.wyy.bean.Cart;
+import ink.wyy.dao.CartDao;
 import ink.wyy.util.C3P0Util;
 
 import java.sql.Connection;
@@ -53,6 +54,28 @@ public class CartDaoImpl implements CartDao {
         } catch (SQLException e) {
             System.out.println(e);
             return "删除失败";
+        } finally {
+            C3P0Util.close(con);
+        }
+    }
+
+    @Override
+    public String update(Integer id, Integer buyNum) {
+        Connection con = C3P0Util.getConnection();
+        try {
+            String sql = "update tb_cart set buy_num=? where id=?;";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, buyNum);
+            statement.setInt(2, id);
+            int num = statement.executeUpdate();
+            if (num == 1) {
+                return null;
+            } else {
+                return "更新失败";
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return "更新失败";
         } finally {
             C3P0Util.close(con);
         }
@@ -158,6 +181,33 @@ public class CartDaoImpl implements CartDao {
             String sql = "select * from tb_cart where id=?;";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                Cart cart = new Cart();
+                cart.setId(rs.getInt("id"));
+                cart.setCommodityId(rs.getInt("commodity_id"));
+                cart.setUserId(rs.getInt("user_id"));
+                cart.setBuyNum(rs.getInt("buy_num"));
+                return cart;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        } finally {
+            C3P0Util.close(con);
+        }
+    }
+
+    @Override
+    public Cart findByCommodityId(Integer commodityId, Integer userId) {
+        Connection con = C3P0Util.getConnection();
+        try {
+            String sql = "select * from tb_cart where commodity_id=? and user_id=?;";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, commodityId);
+            statement.setInt(2, userId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Cart cart = new Cart();

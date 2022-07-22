@@ -1,8 +1,9 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import ink.wyy.bean.Notice;
 import ink.wyy.dao.NoticeDao;
+import ink.wyy.service.NoticeService;
 
 import java.util.HashMap;
 import java.util.Objects;

@@ -1,6 +1,7 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import ink.wyy.bean.User;
+import ink.wyy.dao.UserDao;
 import ink.wyy.util.C3P0Util;
 
 import java.sql.*;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserDaoImpl implements UserDao{
+public class UserDaoImpl implements UserDao {
 
     @Override
     public String insert(User user) {

@@ -1,9 +1,10 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import ink.wyy.bean.Commodity;
 import ink.wyy.dao.CommodityDao;
+import ink.wyy.service.CommodityService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

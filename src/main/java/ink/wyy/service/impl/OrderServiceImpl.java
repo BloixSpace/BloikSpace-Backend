@@ -1,13 +1,15 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import ink.wyy.bean.Commodity;
 import ink.wyy.bean.Notice;
 import ink.wyy.bean.Order;
 import ink.wyy.dao.CommodityDao;
-import ink.wyy.dao.CommodityDaoImpl;
-import ink.wyy.dao.NoticeDaoImpl;
+import ink.wyy.dao.impl.CommodityDaoImpl;
+import ink.wyy.dao.impl.NoticeDaoImpl;
 import ink.wyy.dao.OrderDao;
+import ink.wyy.service.NoticeService;
+import ink.wyy.service.OrderService;
 
 import java.util.HashMap;
 import java.util.Objects;

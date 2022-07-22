@@ -3,9 +3,9 @@ package ink.wyy.controller;
 import com.google.gson.Gson;
 import ink.wyy.bean.User;
 import ink.wyy.dao.UserDao;
-import ink.wyy.dao.UserDaoImpl;
+import ink.wyy.dao.impl.UserDaoImpl;
 import ink.wyy.service.UserService;
-import ink.wyy.service.UserServiceImpl;
+import ink.wyy.service.impl.UserServiceImpl;
 import ink.wyy.util.JsonUtil;
 import ink.wyy.util.MD5Util;
 

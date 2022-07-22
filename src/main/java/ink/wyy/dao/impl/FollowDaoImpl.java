@@ -1,11 +1,13 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
+
+import ink.wyy.dao.FollowDao;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FollowDaoImpl implements FollowDao{
+public class FollowDaoImpl implements FollowDao {
 
     Connection con;
 

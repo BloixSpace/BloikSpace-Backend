@@ -1,12 +1,12 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
 import ink.wyy.bean.Order;
 import ink.wyy.bean.Review;
 import ink.wyy.dao.OrderDao;
-import ink.wyy.dao.OrderDaoImpl;
+import ink.wyy.dao.impl.OrderDaoImpl;
 import ink.wyy.dao.ReviewDao;
-import ink.wyy.dao.ReviewDaoImpl;
+import ink.wyy.service.ReviewService;
 
 import java.util.HashMap;
 import java.util.Objects;

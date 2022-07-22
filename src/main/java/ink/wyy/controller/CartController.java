@@ -3,9 +3,9 @@ package ink.wyy.controller;
 import ink.wyy.bean.Order;
 import ink.wyy.bean.User;
 import ink.wyy.dao.CartDao;
-import ink.wyy.dao.CartDaoImpl;
+import ink.wyy.dao.impl.CartDaoImpl;
 import ink.wyy.service.CartService;
-import ink.wyy.service.CartServiceImpl;
+import ink.wyy.service.impl.CartServiceImpl;
 import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(value = "/cart/*", loadOnStartup = 1)
@@ -89,14 +90,14 @@ public class CartController extends HttpServlet {
     }
 
     private void doDeleteCart(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
-        String s_id = request.get("id");
-        if (s_id == null || s_id.equals("")) {
+        List<Double> s_id = (List<Double>) (Object) request.get("id");
+        System.out.println(s_id);
+        if (s_id.size() == 0) {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
             return;
         }
-        Integer id = Integer.valueOf(s_id);
         User user = (User) req.getSession().getAttribute("user");
-        String res = cartService.delete(id, user.getId());
+        String res = cartService.batchDelete(s_id, user.getId());
         resp.getWriter().write(res);
     }
 
@@ -128,6 +129,7 @@ public class CartController extends HttpServlet {
         String address = request.get("address");
         String nickname = request.get("nickname");
         String remark = request.get("remark");
+        List<Double> list = (List<Double>) ((Object) request.get("commodities"));
         Integer userId = ((User) req.getSession().getAttribute("user")).getId();
         Order order = new Order();
         order.setPhone(phone);
@@ -135,7 +137,7 @@ public class CartController extends HttpServlet {
         order.setNickname(nickname);
         order.setRemark(remark);
         order.setUserId(userId);
-        String res = cartService.settle(userId, order);
+        String res = cartService.settle(userId, order, list);
         resp.getWriter().write(res);
     }
 

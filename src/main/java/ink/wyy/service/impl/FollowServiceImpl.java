@@ -1,13 +1,12 @@
-package ink.wyy.service;
+package ink.wyy.service.impl;
 
 import com.google.gson.Gson;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import ink.wyy.dao.FollowDao;
-import ink.wyy.dao.FollowDaoImpl;
+import ink.wyy.service.FollowService;
 
 import java.util.HashMap;
 
-public class FollowServiceImpl implements FollowService{
+public class FollowServiceImpl implements FollowService {
 
     FollowDao followDao;
     Gson gson;

@@ -3,9 +3,9 @@ package ink.wyy.controller;
 import ink.wyy.bean.Review;
 import ink.wyy.bean.User;
 import ink.wyy.dao.ReviewDao;
-import ink.wyy.dao.ReviewDaoImpl;
+import ink.wyy.dao.impl.ReviewDaoImpl;
 import ink.wyy.service.ReviewService;
-import ink.wyy.service.ReviewServiceImpl;
+import ink.wyy.service.impl.ReviewServiceImpl;
 import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;

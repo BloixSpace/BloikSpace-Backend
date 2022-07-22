@@ -1,6 +1,7 @@
-package ink.wyy.dao;
+package ink.wyy.dao.impl;
 
 import ink.wyy.bean.Commodity;
+import ink.wyy.dao.CommodityDao;
 import ink.wyy.util.C3P0Util;
 
 import java.sql.*;

@@ -3,9 +3,9 @@ package ink.wyy.controller;
 import ink.wyy.bean.Order;
 import ink.wyy.bean.User;
 import ink.wyy.dao.OrderDao;
-import ink.wyy.dao.OrderDaoImpl;
+import ink.wyy.dao.impl.OrderDaoImpl;
 import ink.wyy.service.OrderService;
-import ink.wyy.service.OrderServiceImpl;
+import ink.wyy.service.impl.OrderServiceImpl;
 import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;

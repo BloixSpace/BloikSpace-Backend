@@ -2,9 +2,9 @@ package ink.wyy.controller;
 
 import ink.wyy.bean.User;
 import ink.wyy.dao.NoticeDao;
-import ink.wyy.dao.NoticeDaoImpl;
+import ink.wyy.dao.impl.NoticeDaoImpl;
 import ink.wyy.service.NoticeService;
-import ink.wyy.service.NoticeServiceImpl;
+import ink.wyy.service.impl.NoticeServiceImpl;
 import ink.wyy.util.JsonUtil;
 
 import javax.servlet.ServletException;
