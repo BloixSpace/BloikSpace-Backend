@@ -85,4 +85,12 @@
     <filter-name>noticeFilter</filter-name>
     <url-pattern>/notice/*</url-pattern>
   </filter-mapping>
+  <filter>
+    <filter-name>starFilter</filter-name>
+    <filter-class>ink.wyy.filter.StarFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>starFilter</filter-name>
+    <url-pattern>/star/*</url-pattern>
+  </filter-mapping>
 </web-app>
