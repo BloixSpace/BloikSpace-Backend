@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
     public String add(Order order) {
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", 0);
-        if (order.getCommodityId() == null || order.getCommodityId() == 0) {
+        if (order.getCommodityId() == null || order.getCommodityId() <= 0) {
             res.put("errMsg", "commodity_id不能为空");
             return gson.toJson(res);
         }
@@ -41,11 +41,11 @@ public class OrderServiceImpl implements OrderService {
             res.put("errMsg", "address不能为空");
             return gson.toJson(res);
         }
-        if (order.getPhone() == null || order.getPhone().equals("")) {
-            res.put("errMsg", "phone不能为空");
+        if (order.getPhone() == null || order.getPhone().equals("") || order.getPhone().length() != 11) {
+            res.put("errMsg", "请输入11位手机号");
             return gson.toJson(res);
         }
-        if (order.getBuyNum() == null || order.getBuyNum() == 0) {
+        if (order.getBuyNum() == null || order.getBuyNum() <= 0) {
             res.put("errMsg", "购买数量不能为空");
             return gson.toJson(res);
         }

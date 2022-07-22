@@ -32,12 +32,12 @@ public class CommodityServiceImpl implements CommodityService {
             res.put("errMsg", "pic不能为空");
             return gson.toJson(res);
         }
-        if (commodity.getPrice() == null || commodity.getPrice() == 0) {
-            res.put("errMsg", "price不能为空");
+        if (commodity.getPrice() == null || commodity.getPrice() <= 0) {
+            res.put("errMsg", "price不合法");
             return gson.toJson(res);
         }
-        if (commodity.getStock() == null || commodity.getStock() == 0) {
-            res.put("errMsg", "stock不能为空");
+        if (commodity.getStock() == null || commodity.getStock() <= 0) {
+            res.put("errMsg", "stock不合法");
             return gson.toJson(res);
         }
         commodity = commodityDao.add(commodity);
@@ -54,14 +54,21 @@ public class CommodityServiceImpl implements CommodityService {
     public String update(Map<String, String> req, Integer userId) {
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", 0);
-        String id = req.get("id");
-        if (id == null) {
+        String s_id = req.get("id");
+        if (s_id == null) {
             res.put("errMsg", "id不能为空");
             return gson.toJson(res);
         }
-        Commodity commodity = commodityDao.findById(Integer.valueOf(id));
+        Integer id = null;
+        try {
+            id = Integer.valueOf(s_id);
+        } catch (Exception e) {
+            res.put("errMsg", "id不合法");
+            return gson.toJson(res);
+        }
+        Commodity commodity = commodityDao.findById(id);
         if (commodity == null) {
-            res.put("errMsg", "文章不存在");
+            res.put("errMsg", "商品不存在");
             return gson.toJson(res);
         }
         if (!Objects.equals(commodity.getUserId(), userId)) {
@@ -87,10 +94,21 @@ public class CommodityServiceImpl implements CommodityService {
             commodity.setPicUri(picUri);
         }
         if (s_price != null && !s_price.equals("")) {
-            commodity.setPrice(Double.valueOf(s_price));
+            try {
+                commodity.setPrice(Double.valueOf(s_price));
+            } catch (Exception e) {
+                res.put("errMsg", "价格不合法");
+                return gson.toJson(res);
+            }
         }
         if (s_stock != null && !s_stock.equals("")) {
-            commodity.setStock(Integer.valueOf(s_stock));
+            try {
+                Integer stock = Integer.valueOf(s_stock);
+                commodity.setStock(stock);
+            } catch (Exception e) {
+                res.put("errMsg", "库存不合法");
+                return gson.toJson(res);
+            }
         }
         String msg = commodityDao.update(commodity);
         if (msg == null) {

@@ -27,9 +27,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public String add(Integer commodityId, Integer userId, Integer buyNum) {
         HashMap<String, Object> res = new HashMap<>();
-        if (buyNum == null || buyNum == 0) {
+        if (buyNum == null || buyNum <= 0) {
             res.put("status", 0);
-            res.put("errMsg", "buy_num不能为0");
+            res.put("errMsg", "buy_num不合法");
             return gson.toJson(res);
         }
         String msg = cartDao.add(commodityId, userId, buyNum);
@@ -115,6 +115,11 @@ public class CartServiceImpl implements CartService {
         if (order.getPhone() == null || order.getPhone().equals("")) {
             res.put("status", 0);
             res.put("errMsg", "手机不能为空");
+            return gson.toJson(res);
+        }
+        if (order.getBuyNum() <= 0) {
+            res.put("status", 0);
+            res.put("errMsg", "购买数量不合法");
             return gson.toJson(res);
         }
 
