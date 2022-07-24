@@ -89,7 +89,7 @@ public class StarDaoImpl implements StarDao {
             int idx = 1;
             if (commodityId != null) {
                 sql += " and tc.id=? ";
-                totSql += " and commodityId=? ";
+                totSql += " and commodity_id=? ";
                 idx++;
             }
             sql += " order by a." + order;
