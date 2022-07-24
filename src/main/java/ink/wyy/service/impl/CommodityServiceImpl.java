@@ -73,7 +73,7 @@ public class CommodityServiceImpl implements CommodityService {
             res.put("errMsg", "商品不存在");
             return gson.toJson(res);
         }
-        if (!Objects.equals(commodity.getUserId(), userId)) {
+        if (userId != -1 && !Objects.equals(commodity.getUserId(), userId)) {
             res.put("errMsg", "无操作权限");
             return gson.toJson(res);
         }

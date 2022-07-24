@@ -112,6 +112,7 @@ public class CommodityController extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         Integer userId = user.getId();
+        if (user.getLevel() == 3) userId = -1;
         String res = commodityService.update(request, userId);
         resp.getWriter().write(res);
     }
@@ -121,6 +122,7 @@ public class CommodityController extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         Integer userId = user.getId();
+        if (user.getLevel() == 3) userId = -1;
         String msg = commodityService.delete(id, userId);
         resp.getWriter().write(msg);
     }
