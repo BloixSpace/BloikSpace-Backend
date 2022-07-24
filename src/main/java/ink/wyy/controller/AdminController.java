@@ -117,12 +117,14 @@ public class AdminController extends HttpServlet {
     }
 
     private void doBatchDelete(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        // 传入一个数组
         List<Double> list = (List<Double>) ((Object) request.get("id"));
         List<Integer> intList = new ArrayList<>();
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", 1);
         int num = 0;
         StringBuilder errMsg = new StringBuilder();
+        // 默认是浮点数将其转化成整数
         for (Double x : list) {
             num++;
             Integer id = x.intValue();

@@ -199,6 +199,9 @@ public class CartServiceImpl implements CartService {
         for (int i = 0; i < list.size(); i++) {
             // 通过传入list找到对应购物车条目和商品
             Cart cart = cartDao.findById(((Double) list.get(i)).intValue());
+            if (cart == null) {
+                continue;
+            }
             Commodity commodity = commodityDao.findById(cart.getCommodityId());
             // 购买完成后，删除对应购物车条目
             cartDao.delete(cart.getId());

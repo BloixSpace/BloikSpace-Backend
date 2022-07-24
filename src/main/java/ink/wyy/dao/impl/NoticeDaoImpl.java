@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 通知系统，目前仅支持系统发送通知。
+ */
+
 public class NoticeDaoImpl implements NoticeDao {
 
     @Override

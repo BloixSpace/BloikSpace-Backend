@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 购物车数据库类
+ * 支持curd，清空以及获得列表。
+ */
+
 public class CartDaoImpl implements CartDao {
 
     @Override

@@ -93,6 +93,7 @@ public class CartController extends HttpServlet {
     }
 
     private void doDeleteCart(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        // 传入一个列表
         List<Double> s_id = (List<Double>) (Object) request.get("id");
         System.out.println(s_id);
         if (s_id.size() == 0) {
@@ -132,8 +133,9 @@ public class CartController extends HttpServlet {
         String address = request.get("address");
         String nickname = request.get("nickname");
         String remark = request.get("remark");
-        List<Double> list = (List<Double>) ((Object) request.get("commodities"));
+        List<Double> list = (List<Double>) ((Object) request.get("id"));
         Integer userId = ((User) req.getSession().getAttribute("user")).getId();
+        // 创建一个订单模板
         Order order = new Order();
         order.setPhone(phone);
         order.setAddress(address);

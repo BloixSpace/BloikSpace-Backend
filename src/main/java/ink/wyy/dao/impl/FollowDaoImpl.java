@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * 关注系统已弃用
+ */
+
 public class FollowDaoImpl implements FollowDao {
 
     Connection con;

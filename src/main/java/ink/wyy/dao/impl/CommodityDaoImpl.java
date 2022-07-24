@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 商品数据库类
+ * curd，购买发货，获得列表。
+ */
+
 public class CommodityDaoImpl implements CommodityDao {
 
     @Override
