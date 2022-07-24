@@ -71,6 +71,9 @@ public class CommodityController extends HttpServlet {
             case "/commodity/list":
                 doGetList(req, resp);
                 break;
+            case "/commodity/getCategoryList":
+                doGetCategoryList(req, resp);
+                break;
             default:
                 resp.sendError(404);
         }
@@ -120,6 +123,11 @@ public class CommodityController extends HttpServlet {
         Integer userId = user.getId();
         String msg = commodityService.delete(id, userId);
         resp.getWriter().write(msg);
+    }
+
+    private void doGetCategoryList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String res = commodityService.getCategoryList();
+        resp.getWriter().write(res);
     }
 
     private void doGetList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

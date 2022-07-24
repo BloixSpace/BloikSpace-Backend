@@ -204,6 +204,26 @@ public class CommodityDaoImpl implements CommodityDao {
     }
 
     @Override
+    public List<String> getCategoryList() {
+        Connection con = C3P0Util.getConnection();
+        try {
+            String sql = "select distinct category from tb_commodity";
+            PreparedStatement statement = con.prepareStatement(sql);
+            List<String> list = new ArrayList<>();
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString(1));
+            }
+            return list;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        } finally {
+            C3P0Util.close(con);
+        }
+    }
+
+    @Override
     public HashMap<String, Object> getList(int page, int pageSize, String order, String category, String key, Integer userId, Boolean desc) {
         Connection con = C3P0Util.getConnection();
         try {

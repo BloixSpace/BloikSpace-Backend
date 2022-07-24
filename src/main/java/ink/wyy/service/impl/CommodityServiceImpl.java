@@ -8,6 +8,7 @@ import ink.wyy.service.CommodityService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -195,5 +196,12 @@ public class CommodityServiceImpl implements CommodityService {
             map.put("errMsg", "order不存在");
         }
         return gson.toJson(map);
+    }
+
+    @Override
+    public String getCategoryList() {
+        List<String> list = commodityDao.getCategoryList();
+        System.out.println(list);
+        return gson.toJson(list);
     }
 }

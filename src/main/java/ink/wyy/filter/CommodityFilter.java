@@ -51,6 +51,7 @@ public class CommodityFilter implements Filter {
                 }
             case "/commodity/get":
             case "/commodity/list":
+            case "/commodity/getCategoryList":
                 filterChain.doFilter(req, resp);
                 break;
         }
