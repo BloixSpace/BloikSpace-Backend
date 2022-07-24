@@ -125,6 +125,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public String update(Integer id, Integer userId, Integer buyNum) {
         Cart cart = cartDao.findById(id);
+        Commodity commodity = commodityDao.findById(cart.getCommodityId());
         HashMap<String, Object> res = new HashMap<>();
         if (cart == null) {
             res.put("status", 0);
@@ -134,6 +135,16 @@ public class CartServiceImpl implements CartService {
         if (!Objects.equals(cart.getUserId(), userId)) {
             res.put("status", 0);
             res.put("errMsg", "无操作权限");
+            return gson.toJson(res);
+        }
+        if (buyNum < 0) {
+            res.put("status", 0);
+            res.put("errMsg", "购买数量不能为负");
+            return gson.toJson(res);
+        }
+        if (buyNum > commodity.getStock()) {
+            res.put("status", 0);
+            res.put("errMsg", "库存不足");
             return gson.toJson(res);
         }
         String msg = cartDao.update(id, buyNum);

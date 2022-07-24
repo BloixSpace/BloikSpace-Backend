@@ -181,8 +181,10 @@ public class OrderController extends HttpServlet {
             resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
             return;
         }
+        Integer userId = user.getId();
+        if (user.getLevel() == 3) userId = -1;
         Integer id = Integer.valueOf(s_id);
-        String res = orderService.get(id, user.getId());
+        String res = orderService.get(id, userId);
         resp.getWriter().write(res);
     }
 

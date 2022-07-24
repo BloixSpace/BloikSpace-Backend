@@ -163,6 +163,7 @@ public class UserDaoImpl implements UserDao {
                 user.setAvatarUri(rs.getString("avatar_uri"));
                 user.setCreateDate(rs.getDate("create_date"));
                 user.setSignature(rs.getString("signature"));
+                user.setPhone(rs.getString("phone"));
                 user.setLevel(rs.getInt("level"));
                 break;
             }
@@ -200,6 +201,7 @@ public class UserDaoImpl implements UserDao {
                 user.setAvatarUri(rs.getString("avatar_uri"));
                 user.setCreateDate(rs.getDate("create_date"));
                 user.setSignature(rs.getString("signature"));
+                user.setPhone(rs.getString("phone"));
                 user.setLevel(rs.getInt("level"));
                 break;
             }
@@ -254,6 +256,7 @@ public class UserDaoImpl implements UserDao {
                 map.put("avatar_uri", rs.getString("avatar_uri"));
                 map.put("signature", rs.getString("signature"));
                 map.put("level", rs.getInt("level"));
+                map.put("phone", rs.getString("phone"));
                 map.put("create_date", rs.getString("create_date"));
                 list.add(map);
             }

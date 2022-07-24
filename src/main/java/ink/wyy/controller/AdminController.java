@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/admin/*")
@@ -52,6 +54,9 @@ public class AdminController extends HttpServlet {
             case "/admin/deleteCommodity":
                 doDeleteCommodity(req, resp, request);
                 break;
+            case "/admin/batchDelete":
+                doBatchDelete(req, resp, request);
+                break;
             default:
                 resp.sendError(404);
         }
@@ -62,6 +67,7 @@ public class AdminController extends HttpServlet {
 
         HashMap<String, Object> res = new HashMap<>();
 
+        // 返回信息存在错误
         if (user.getErrorMsg() != null) {
             res.put("status", 0);
             res.put("errMsg", user.getErrorMsg());
@@ -69,6 +75,7 @@ public class AdminController extends HttpServlet {
             return;
         }
 
+        // 成功返回
         res.put("status", 1);
         resp.getWriter().write(gson.toJson(res));
     }
@@ -109,6 +116,30 @@ public class AdminController extends HttpServlet {
         resp.getWriter().write(gson.toJson(res));
     }
 
+    private void doBatchDelete(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        List<Double> list = (List<Double>) ((Object) request.get("id"));
+        List<Integer> intList = new ArrayList<>();
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("status", 1);
+        int num = 0;
+        StringBuilder errMsg = new StringBuilder();
+        for (Double x : list) {
+            num++;
+            Integer id = x.intValue();
+            String msg = userService.delUser(id);
+            // 判断第i个用户是否删除成功
+            if (msg != null) {
+                if (!errMsg.toString().equals("")) errMsg.append("\n");
+                errMsg.append(id).append(" ").append(msg);
+            }
+        }
+        // 如果没有成功的，返回状态失败
+        if (num == 0) {
+            res.put("status", 0);
+        }
+        if (!errMsg.toString().equals("")) res.put("errMsg", errMsg.toString());
+        resp.getWriter().write(gson.toJson(res));
+    }
 
     private void doDeleteCommodity(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
         String id = request.get("id");

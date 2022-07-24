@@ -1,5 +1,7 @@
 package ink.wyy.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Date;
 import java.util.Objects;
 
@@ -9,7 +11,9 @@ public class User {
     private String password;
     private Integer id;
     private String signature;
+    @SerializedName("avatar_uri")
     private String avatarUri;
+    @SerializedName("create_date")
     private Date createDate;
     private Integer level;  // 1普通，2管理员，3超管
     private String errorMsg;

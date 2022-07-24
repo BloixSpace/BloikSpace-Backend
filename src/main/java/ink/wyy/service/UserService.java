@@ -9,7 +9,7 @@ public interface UserService {
     User register(String username, String password);
     User UserSetUserInfo(User user);
     User AdminSetUserInfo(Map<String, String> req);
-    User getUser(User user);
+    String getUser(User user);
     User addUser(Map<String, String> req);
     String delUser(Integer id);
     User updatePassword(User user, String newPwd, String oldPwd);

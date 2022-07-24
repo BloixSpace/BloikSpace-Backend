@@ -80,6 +80,9 @@ public class UserController extends HttpServlet {
             case "/user/getUserList":
                 doGetUserList(req, resp);
                 break;
+            case "/user/getUser":
+                doGetUser(req, resp);
+                break;
             default:
                 resp.sendError(404);
         }
@@ -272,6 +275,24 @@ public class UserController extends HttpServlet {
         if (s_desc.equals("true")) desc = true;
 
         String res = userService.getUserList(page, pageSize, order, desc);
+        resp.getWriter().write(res);
+    }
+
+    private void doGetUser(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+        String s_id = req.getParameter("id");
+        User user = (User) req.getSession().getAttribute("user");
+        if (s_id == null || s_id.equals("")) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
+            return;
+        }
+        if (user.getLevel() != 3) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"无操作权限\"}");
+            return;
+        }
+        Integer id = Integer.valueOf(s_id);
+        User qUser = new User();
+        qUser.setId(id);
+        String res = userService.getUser(qUser);
         resp.getWriter().write(res);
     }
 }

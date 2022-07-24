@@ -51,6 +51,9 @@ public class CartController extends HttpServlet {
             case "/cart/delete":
                 doDeleteCart(req, resp, request);
                 break;
+            case "/cart/update":
+                doUpdate(req, resp, request);
+                break;
             default:
                 resp.sendError(404);
         }
@@ -139,6 +142,24 @@ public class CartController extends HttpServlet {
         order.setUserId(userId);
         String res = cartService.settle(userId, order, list);
         resp.getWriter().write(res);
+    }
+
+    private void doUpdate(HttpServletRequest req, HttpServletResponse resp, Map<String, String> request) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        String s_id = request.get("id");
+        if (s_id == null || s_id.equals("")) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"id不能为空\"}");
+            return;
+        }
+        String s_buyNum = request.get("buy_num");
+        if (s_buyNum == null || s_buyNum.equals("")) {
+            resp.getWriter().write("{\"status\":0,\"errMsg\":\"buyNum不能为空\"}");
+            return;
+        }
+        Integer buyNum = Integer.valueOf(s_buyNum);
+        Integer id = Integer.valueOf(s_id);
+        String msg = cartService.update(id, user.getId(), buyNum);
+        resp.getWriter().write(msg);
     }
 
 }

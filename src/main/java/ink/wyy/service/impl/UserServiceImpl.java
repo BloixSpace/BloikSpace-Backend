@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = req.get("username");
         String password = req.get("password");
-        String avatarUri = req.get("avatarUri");
+        String avatarUri = req.get("avatar_uri");
         String signature = req.get("signature");
         String phone = req.get("phone");
         Integer level = null;
@@ -134,13 +134,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(User user) {
+    public String getUser(User user) {
         if (user.getId() != null) {
             user = userDao.findById(user.getId());
         } else if (user.getUsername() != null) {
             user = userDao.findByUsername(user.getUsername());
         }
-        return user;
+        user.setPassword(null);
+        return gson.toJson(user);
     }
 
     @Override
